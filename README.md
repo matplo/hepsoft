@@ -8,7 +8,10 @@ To install things:
 bin/install_all.sh
 
 Or individual:
-install_hepmc.sh
-install_lhapdf.sh
-install_fastjet.sh
-install_pythia8.sh
+bin/install_hepmc.sh
+bin/install_lhapdf.sh
+bin/install_fastjet.sh
+bin/install_pythia8.sh
+
+For module files:
+bin/install_modules.sh

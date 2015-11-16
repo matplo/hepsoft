@@ -2,6 +2,22 @@
 
 XDIR="<dir to be set>"
 mkdir -p $XDIR/logs
+
+ropts=""
+if [ ${`uname -n`:0:4} == "pdsf" ]; then
+	ropts="-o -Dxrootd=OFF -o -Dldap=OFF"
+fi
+
+rversion="v5-34-34"
+$XDIR/bin/install_root_w_cmake.sh -gcbi -d $XDIR $ropts -v $rversion
+. $XDIR/root/$rversion/bin/thisroot.sh
+
+if [ ${`uname -n`:0:4} == "pdsf" ]; then
+	echo "[i] no add rpath on pdsf"
+else
+	$XDIR/bin/addrpath.sh
+fi
+
 $XDIR/bin/install_hepmc.sh 		2>&1 | tee $XDIR/logs/install_hepmc.log
 $XDIR/bin/install_lhapdf.sh 	2>&1 | tee $XDIR/logs/install_lhapdf.log
 $XDIR/bin/install_fastjet.sh	2>&1 | tee $XDIR/logs/install_fastjet.log
