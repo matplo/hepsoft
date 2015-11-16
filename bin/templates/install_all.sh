@@ -10,7 +10,10 @@ if [ ${syst:0:4} == "pdsf" ]; then
 fi
 
 rversion="v5-34-34"
-$XDIR/bin/install_root_w_cmake.sh -gcbi -d $XDIR $ropts -v $rversion
+$XDIR/bin/install_root_w_cmake.sh -g -d $XDIR $ropts -v $rversion
+$XDIR/bin/install_root_w_cmake.sh -cn -d $XDIR $ropts -v $rversion
+$XDIR/bin/install_root_w_cmake.sh -b -d $XDIR $ropts -v $rversion
+$XDIR/bin/install_root_w_cmake.sh -i -d $XDIR $ropts -v $rversion
 . $XDIR/root/$rversion/bin/thisroot.sh
 
 if [ ${`uname -n`:0:4} == "pdsf" ]; then
