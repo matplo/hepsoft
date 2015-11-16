@@ -135,7 +135,7 @@ bdir="$gitdir/build_$version"
 idir=$xdir/root/$version	
 
 if [ "$clone" == "yes" ]; then
-	echo "[i] clone is "$clone
+	mkdir -p $gitdir
 	cd $gitdir
 	git clone http://root.cern.ch/git/root.git
 	cd $gitdir/root

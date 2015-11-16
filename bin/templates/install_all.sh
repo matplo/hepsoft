@@ -4,7 +4,8 @@ XDIR="<dir to be set>"
 mkdir -p $XDIR/logs
 
 ropts=""
-if [ ${`uname -n`:0:4} == "pdsf" ]; then
+syst=`uname -n`
+if [ ${syst:0:4} == "pdsf" ]; then
 	ropts="-o -Dxrootd=OFF -o -Dldap=OFF"
 fi
 
