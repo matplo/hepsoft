@@ -25,7 +25,9 @@ fi
 THISDIR=$XDIR
 
 idir=$1
-[ -z $1 ] && idir=$THISDIR
+[ -z $1 ] && idir=`dirname $THISDIR`
+
+module load cmake
 
 $THISDIR/install_root_w_cmake.sh -g -d $idir
 $THISDIR/install_root_w_cmake.sh -c -n -o -Dxrootd=OFF -o -Dldap=OFF -d $idir
