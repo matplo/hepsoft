@@ -71,7 +71,14 @@ EOF
     gROOT->LoadMacro("runglauber_v2.3.C+");
 }
 EOF
-
+    cat>>run_pPb.C<<EOF
+{
+    gSystem->Load("libMathMore");
+    gSystem->Load("libTGlauberMC");
+    // this is pA 5.02 at the LHC sigmaNN=70mb - with GGribov fluctuations 5mb; minimum separation=0.4
+    runAndSaveNtuple(10000, "p", "Pb", 70, 5, 0.4, "glau_pPb_ntuple.root");
+}
+EOF
 }
 
 if [ ! -d "$working_dir" ]; then
