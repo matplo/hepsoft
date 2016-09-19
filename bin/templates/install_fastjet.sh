@@ -46,7 +46,7 @@ function write_setup_script()
     fname=setenv_fastjet_$2.sh
     outdir=$1/bin
     #outfile=$outdir/$fname
-    mkdir -p $XDIR/scripts 
+    mkdir -p $XDIR/scripts
     outfile=$XDIR/scripts/$fname
     rm -rf $outfile
 
@@ -54,7 +54,7 @@ function write_setup_script()
 #!/bin/bash
 
 export FASTJETDIR=$1
-export FASTJET_VERSION=$2    
+export FASTJET_VERSION=$2
 export DYLD_LIBRARY_PATH=\$FASTJETDIR/lib:\$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=\$FASTJETDIR/lib:\$LD_LIBRARY_PATH
 export PATH=\$FASTJETDIR/bin:\$PATH
@@ -78,7 +78,7 @@ proc ModulesHelp { } {
 
 set     version $version
 setenv  FASTJETDIR $1
-setenv  FASTJET_VERSION $2    
+setenv  FASTJET_VERSION $2
 prepend-path LD_LIBRARY_PATH $1/lib
 prepend-path DYLD_LIBRARY_PATH $1/lib
 prepend-path PATH $1/bin
@@ -90,12 +90,13 @@ if [ ! -d "$working_dir" ]; then
     echo "[error] $working_dir does not exist."
 else
     version=$1
-    [ -z $version ] && version=3.1.2
+    #[ -z $version ] && version=3.1.2
+    [ -z $version ] && version=3.2.1
     install_dir="$working_dir/$version"
 
     cd $working_dir
     echo $PWD
-    echo "[i] will install to: $install_dir"    
+    echo "[i] will install to: $install_dir"
     echo "[i] installing fastjet $version"
 
     fdfile="fastjet-$version.tar.gz"
@@ -113,7 +114,7 @@ else
     tar zxvf ./downloads/$fdfile
     cd $srcdir
 
-    [ "$2" = "clean" ] && make clean    
+    [ "$2" = "clean" ] && make clean
 
     exec_configure $install_dir
 
