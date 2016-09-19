@@ -9,7 +9,7 @@ if [ ${syst:0:4} == "pdsf" ]; then
 	ropts="-o -Dxrootd=OFF -o -Dldap=OFF"
 fi
 
-rversion="v5-34-34"
+rversion="v5-34-36"
 $XDIR/bin/install_root_w_cmake.sh -g -d $XDIR $ropts -v $rversion
 $XDIR/bin/install_root_w_cmake.sh -cn -d $XDIR $ropts -v $rversion
 $XDIR/bin/install_root_w_cmake.sh -b -d $XDIR $ropts -v $rversion

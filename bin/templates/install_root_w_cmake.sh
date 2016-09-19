@@ -30,7 +30,7 @@ function check_for_errors
 		echo "[e] unknown or invalid argument(s) given"
 		usage
 		return 2
-	fi	
+	fi
 	return $errcode
 }
 
@@ -48,7 +48,7 @@ function is_arg_set
 					;;
 				-- )
 					break;;
-		esac	
+		esac
 	done
 	echo ""
 }
@@ -75,7 +75,7 @@ function arg_with
 					;;
 				-- )
 					break;;
-		esac	
+		esac
 	done
 	echo $oarg
 }
@@ -95,7 +95,7 @@ xdir=`arg_with -d`
 
 [ $help ] && usage && exit 0
 #[ -z $version ] && echo "[e] version not specified" && usage && exit 0
-[ -z $version ] && version=v5-34-34 && echo "[w] using default version" 
+[ -z $version ] && version=v5-34-34 && echo "[w] using default version"
 [ -z $xdir ] && xdir=$PWD && echo "[w] using PWD as working/install directory"
 usage
 
@@ -116,7 +116,7 @@ proc ModulesHelp { } {
 set     version $version
 setenv  ROOTSYS $1
 setenv  ROOTDIR $1
-setenv  ROOT_VERSION $2    
+setenv  ROOT_VERSION $2
 prepend-path LD_LIBRARY_PATH $1/lib
 prepend-path DYLD_LIBRARY_PATH $1/lib
 prepend-path PATH $1/bin
@@ -132,7 +132,7 @@ wdir=$xdir
 mkdir -p $wdir
 gitdir=$xdir/rootgit
 bdir="$gitdir/build_$version"
-idir=$xdir/root/$version	
+idir=$xdir/root/$version
 
 if [ "$clone" == "yes" ]; then
 	mkdir -p $gitdir
