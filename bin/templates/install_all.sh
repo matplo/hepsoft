@@ -30,4 +30,4 @@ $XDIR/bin/install_fastjet.sh	2>&1 | tee $XDIR/logs/install_fastjet.log
 . $XDIR/scripts/setenv_hepmc_2.06.09.sh
 . $XDIR/scripts/setenv_lhapdf_5.9.1.sh
 
-$XDIR/bin/install_pythia8.sh 8215 2>&1 | tee $XDIR/logs/install_pythia8.log
+$XDIR/bin/install_pythia8.sh 8219 2>&1 | tee $XDIR/logs/install_pythia8.log
