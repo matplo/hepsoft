@@ -139,7 +139,8 @@ if [ "$clone" == "yes" ]; then
 	cd $gitdir
 	git clone http://root.cern.ch/git/root.git
 	cd $gitdir/root
-	git checkout tags/$version
+	# git checkout tags/$version
+	git checkout $version
 fi
 
 if [ "$configure" == "yes" ]; then
