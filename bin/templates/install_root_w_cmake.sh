@@ -95,7 +95,8 @@ xdir=`arg_with -d`
 
 [ $help ] && usage && exit 0
 #[ -z $version ] && echo "[e] version not specified" && usage && exit 0
-[ -z $version ] && version=v5-34-34 && echo "[w] using default version"
+#[ -z $version ] && version=v5-34-34 && echo "[w] using default version"
+[ -z $version ] && version=v6-08-06 && echo "[w] using default version"
 [ -z $xdir ] && xdir=$PWD && echo "[w] using PWD as working/install directory"
 usage
 
@@ -139,8 +140,12 @@ if [ "$clone" == "yes" ]; then
 	cd $gitdir
 	git clone http://root.cern.ch/git/root.git
 	cd $gitdir/root
+	git pull
 	# git checkout tags/$version
-	git checkout $version
+	# git checkout $version
+	# cd $gitdir
+	pwd
+	git checkout -b $version
 fi
 
 if [ "$configure" == "yes" ]; then
