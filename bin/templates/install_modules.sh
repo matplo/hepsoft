@@ -27,6 +27,7 @@ module load hepsoft/pythia
 module load hepsoft/lhapdf
 module load hepsoft/hepmc
 module load hepsoft/fastjet
+module load hepsoft/hydjet
 
 EOF
 
