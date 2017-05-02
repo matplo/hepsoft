@@ -37,7 +37,7 @@ function exec_configure()
     if [ -z $cgaldir ]; then
 	./configure --prefix=$1 CXXFLAGS="-shared -fPIC"
     else
-	./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir CXXFLAGS=-shared -fPIC
+	./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir CXXFLAGS="-shared -fPIC"
     fi
 }
 
