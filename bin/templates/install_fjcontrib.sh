@@ -35,9 +35,9 @@ function exec_configure()
     cgaldep=""
     find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib" cgaldir
     if [ -z $cgaldir ]; then
-	./configure --prefix=$1
+	./configure --prefix=$1 CXXFLAGS="-shared -fPIC"
     else
-	./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir
+	./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir CXXFLAGS=-shared -fPIC
     fi
 }
 
