@@ -33,7 +33,7 @@ function find_cgal()
 function exec_configure()
 {
     cgaldep=""
-    find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib" cgaldir
+    find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib:/usr/lib:/usr/local/lib" cgaldir
     if [ -z $cgaldir ]; then
 	./configure --prefix=$1
     else
