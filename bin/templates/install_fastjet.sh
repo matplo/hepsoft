@@ -91,7 +91,7 @@ if [ ! -d "$working_dir" ]; then
 else
     version=$1
     #[ -z $version ] && version=3.1.2
-    [ -z $version ] && version=3.2.1
+    [ -z $version ] && version=3.2.2
     install_dir="$working_dir/$version"
 
     cd $working_dir

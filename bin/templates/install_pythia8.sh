@@ -41,7 +41,7 @@ function write_setup_script()
     fname=setenv_pythia_$2.sh
     outdir=$1/bin
     #outfile=$outdir/$fname
-    mkdir -p $XDIR/scripts 
+    mkdir -p $XDIR/scripts
     outfile=$XDIR/scripts/$fname
     rm -rf $outfile
 
@@ -49,7 +49,7 @@ function write_setup_script()
 #!/bin/bash
 
 export PYTHIA8DIR=$1
-export PYTHIA8_VERSION=$2    
+export PYTHIA8_VERSION=$2
 export DYLD_LIBRARY_PATH=\$PYTHIA8DIR/lib:\$DYLD_LIBRARY_PATH
 export LD_LIBRARY_PATH=\$PYTHIA8DIR/lib:\$LD_LIBRARY_PATH
 export PATH=\$PYTHIA8DIR/bin:\$PATH
@@ -73,7 +73,7 @@ proc ModulesHelp { } {
 
 set     version $version
 setenv  PYTHIA8DIR $1
-setenv  PYTHIA8_VERSION $2    
+setenv  PYTHIA8_VERSION $2
 prepend-path LD_LIBRARY_PATH $1/lib
 prepend-path DYLD_LIBRARY_PATH $1/lib
 prepend-path PATH $1/bin
@@ -85,18 +85,18 @@ if [ ! -d "$working_dir" ]; then
     echo "[error] $working_dir does not exist."
 else
     version=$1
-    [ -z $version ] && version=8212
+    [ -z $version ] && version=8223
     install_dir="$working_dir/$version"
 
     cd $working_dir
     echo $PWD
-    echo "[i] will install to: $install_dir"    
+    echo "[i] will install to: $install_dir"
     echo "[i] install for PYTHIA version $version"
 
     fdfile="pythia$version.tgz"
     srcdir="pythia$version"
     echo "[i] file to download: $fdfile"
-    echo "[i] source sub dir: $srcdir"    
+    echo "[i] source sub dir: $srcdir"
     if [ -e "./downloads/$fdfile" ]; then
         echo "[i] $fdfile exists - will not download"
     else
@@ -108,7 +108,7 @@ else
     tar xvf ./downloads/$fdfile
     cd $srcdir
 
-    [ "$2" = "clean" ] && make clean   
+    [ "$2" = "clean" ] && make clean
 
     exec_configure $install_dir
 
