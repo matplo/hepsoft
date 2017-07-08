@@ -33,7 +33,7 @@ function find_cgal()
 function exec_configure()
 {
     cgaldep=""
-    find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib" cgaldir
+    find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib:/usr/lib:/usr/local/lib" cgaldir
     if [ -z $cgaldir ]; then
 	./configure --prefix=$1
     else
@@ -91,7 +91,7 @@ if [ ! -d "$working_dir" ]; then
 else
     version=$1
     #[ -z $version ] && version=3.1.2
-    [ -z $version ] && version=3.2.1
+    [ -z $version ] && version=3.2.2
     install_dir="$working_dir/$version"
 
     cd $working_dir
