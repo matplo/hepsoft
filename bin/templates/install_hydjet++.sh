@@ -103,9 +103,11 @@ else
     mkdir -p $install_dir
     cd $install_dir
     unzip $working_dir/downloads/$fdfile
-
+    pwd
     # exec_configure $install_dir
-    sed "s/-print-file-name=libgfortran.so/-print-file-name=-lgfortran/g" -i Makefile | tee Makefile
+    sed -i '' "/F77LIBSO      =/c\\
+    F77LIBSO      =-L/usr/lib -L/usr/local/lib -L/usr/local/gfortran/lib -lgfortran
+    " Makefile
 
     [ "$2" = "clean" ] && make clean
     make
