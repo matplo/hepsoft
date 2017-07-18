@@ -2,7 +2,7 @@
 
 savedir=$PWD
 
-optstring="bcd:ghinv:o:"
+optstring="bcd:ghinv:o:m"
 
 function usage
 {
@@ -16,6 +16,7 @@ function usage
 	echo "    build       [-b] [ "$build" ]"
 	echo "    install     [-i] [ "$install" ]"
 	echo "    clean       [-n] [ "$clean" ]"
+	echo "    make module [-m] [ "$makemodule" ]"
 	echo "    help        [-h] [ "$help" ]"
 }
 
@@ -92,6 +93,7 @@ install=`is_arg_set "-i"`
 version=`arg_with "-v"`
 clean=`is_arg_set "-n"`
 xdir=`arg_with -d`
+makemodule=`is_arg_set -m`
 
 [ $help ] && usage && exit 0
 #[ -z $version ] && echo "[e] version not specified" && usage && exit 0
@@ -163,6 +165,10 @@ fi
 if [ "$install" == "yes" ]; then
 	cd $bdir && cmake -DCMAKE_INSTALL_PREFIX=$idir -P cmake_install.cmake && write_module_file $idir $version
 	#ln -s $idir/bin/thisroot.sh "/usr/local/bin/root-$version"
+fi
+
+if [ "$makemodule" == "yes" ]; then
+	write_module_file $idir $version
 fi
 
 cd $savedir
