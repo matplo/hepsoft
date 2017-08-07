@@ -9,7 +9,8 @@ if [ ${syst:0:4} == "pdsf" ]; then
 	ropts="-o -Dxrootd=OFF -o -Dldap=OFF"
 fi
 
-rversion="v5-34-34"
+#rversion="v5-34-36"
+rversion="v6-10-02"
 $XDIR/bin/install_root_w_cmake.sh -g -d $XDIR $ropts -v $rversion
 $XDIR/bin/install_root_w_cmake.sh -cn -d $XDIR $ropts -v $rversion
 $XDIR/bin/install_root_w_cmake.sh -b -d $XDIR $ropts -v $rversion
@@ -24,10 +25,10 @@ fi
 
 $XDIR/bin/install_hepmc.sh 		2>&1 | tee $XDIR/logs/install_hepmc.log
 $XDIR/bin/install_lhapdf.sh 	2>&1 | tee $XDIR/logs/install_lhapdf.log
-$XDIR/bin/install_fastjet.sh	2>&1 | tee $XDIR/logs/install_fastjet.log
+$XDIR/bin/install_fastjet.sh 3.2.2 2>&1 | tee $XDIR/logs/install_fastjet.log
 
-. $XDIR/scripts/setenv_fastjet_3.1.2.sh
+. $XDIR/scripts/setenv_fastjet_3.2.2.sh
 . $XDIR/scripts/setenv_hepmc_2.06.09.sh
 . $XDIR/scripts/setenv_lhapdf_5.9.1.sh
 
-$XDIR/bin/install_pythia8.sh 8215 2>&1 | tee $XDIR/logs/install_pythia8.log
+$XDIR/bin/install_pythia8.sh 8226 2>&1 | tee $XDIR/logs/install_pythia8.log

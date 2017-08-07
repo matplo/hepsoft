@@ -2,7 +2,7 @@
 
 savedir=$PWD
 
-optstring="bcd:ghinv:o:"
+optstring="bcd:ghinv:o:m"
 
 function usage
 {
@@ -16,6 +16,7 @@ function usage
 	echo "    build       [-b] [ "$build" ]"
 	echo "    install     [-i] [ "$install" ]"
 	echo "    clean       [-n] [ "$clean" ]"
+	echo "    make module [-m] [ "$makemodule" ]"
 	echo "    help        [-h] [ "$help" ]"
 }
 
@@ -30,7 +31,7 @@ function check_for_errors
 		echo "[e] unknown or invalid argument(s) given"
 		usage
 		return 2
-	fi	
+	fi
 	return $errcode
 }
 
@@ -48,7 +49,7 @@ function is_arg_set
 					;;
 				-- )
 					break;;
-		esac	
+		esac
 	done
 	echo ""
 }
@@ -75,7 +76,7 @@ function arg_with
 					;;
 				-- )
 					break;;
-		esac	
+		esac
 	done
 	echo $oarg
 }
@@ -92,10 +93,12 @@ install=`is_arg_set "-i"`
 version=`arg_with "-v"`
 clean=`is_arg_set "-n"`
 xdir=`arg_with -d`
+makemodule=`is_arg_set -m`
 
 [ $help ] && usage && exit 0
 #[ -z $version ] && echo "[e] version not specified" && usage && exit 0
-[ -z $version ] && version=v5-34-34 && echo "[w] using default version" 
+#[ -z $version ] && version=v5-34-34 && echo "[w] using default version"
+[ -z $version ] && version=v6-10-02 && echo "[w] using default version"
 [ -z $xdir ] && xdir=$PWD && echo "[w] using PWD as working/install directory"
 usage
 
@@ -116,7 +119,7 @@ proc ModulesHelp { } {
 set     version $version
 setenv  ROOTSYS $1
 setenv  ROOTDIR $1
-setenv  ROOT_VERSION $2    
+setenv  ROOT_VERSION $2
 prepend-path LD_LIBRARY_PATH $1/lib
 prepend-path DYLD_LIBRARY_PATH $1/lib
 prepend-path PATH $1/bin
@@ -132,14 +135,19 @@ wdir=$xdir
 mkdir -p $wdir
 gitdir=$xdir/rootgit
 bdir="$gitdir/build_$version"
-idir=$xdir/root/$version	
+idir=$xdir/root/$version
 
 if [ "$clone" == "yes" ]; then
 	mkdir -p $gitdir
 	cd $gitdir
 	git clone http://root.cern.ch/git/root.git
 	cd $gitdir/root
-	git checkout tags/$version
+	git pull
+	# git checkout tags/$version
+	# git checkout $version
+	# cd $gitdir
+	pwd
+	git checkout -b $version
 fi
 
 if [ "$configure" == "yes" ]; then
@@ -157,6 +165,10 @@ fi
 if [ "$install" == "yes" ]; then
 	cd $bdir && cmake -DCMAKE_INSTALL_PREFIX=$idir -P cmake_install.cmake && write_module_file $idir $version
 	#ln -s $idir/bin/thisroot.sh "/usr/local/bin/root-$version"
+fi
+
+if [ "$makemodule" == "yes" ]; then
+	write_module_file $idir $version
 fi
 
 cd $savedir

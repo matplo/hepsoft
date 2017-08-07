@@ -1,13 +1,9 @@
 #!/bin/bash
 
-[ -z "$LHAPDFDIR" ] && echo "[error] needs LHAPDFDIR" && exit 1
-fjpath=`fastjet-config --prefix`
-[ -z "$fjpath" ] && echo "[error] needs fastjet-config" && exit 1
-
 savedir=$PWD
 
 XDIR="<dir to be set>"
-working_dir="$XDIR/pythia"
+working_dir="$XDIR/hydjet"
 mkdir -p $working_dir
 
 function abspath()
@@ -38,7 +34,7 @@ function exec_configure()
 
 function write_setup_script()
 {
-    fname=setenv_pythia_$2.sh
+    fname=setenv_hydjet_$2.sh
     outdir=$1/bin
     #outfile=$outdir/$fname
     mkdir -p $XDIR/scripts
@@ -48,18 +44,18 @@ function write_setup_script()
     cat>>$outfile<<EOF
 #!/bin/bash
 
-export PYTHIA8DIR=$1
-export PYTHIA8_VERSION=$2
-export DYLD_LIBRARY_PATH=\$PYTHIA8DIR/lib:\$DYLD_LIBRARY_PATH
-export LD_LIBRARY_PATH=\$PYTHIA8DIR/lib:\$LD_LIBRARY_PATH
-export PATH=\$PYTHIA8DIR/bin:\$PATH
+export HYDJETDIR=$1
+export HYDJET_VERSION=$2
+export DYLD_LIBRARY_PATH=\$HYDJETDIR/lib:\$DYLD_LIBRARY_PATH
+export LD_LIBRARY_PATH=\$HYDJETDIR/lib:\$LD_LIBRARY_PATH
+export PATH=\$HYDJETDIR/bin:\$PATH
 EOF
 }
 
 function write_module_file()
 {
     version=$2
-    outfile=$XDIR/modules/pythia/$version
+    outfile=$XDIR/modules/hydjet/$version
     outdir=`dirname $outfile`
     mkdir -p $outdir
     rm -rf $outfile
@@ -68,15 +64,13 @@ function write_module_file()
 #%Module
 proc ModulesHelp { } {
         global version
-        puts stderr "   Setup pythia \$version"
+        puts stderr "   Setup hydjet \$version"
     }
 
 set     version $version
-setenv  PYTHIA8DIR $1
-setenv  PYTHIA8_VERSION $2
-prepend-path LD_LIBRARY_PATH $1/lib
-prepend-path DYLD_LIBRARY_PATH $1/lib
-prepend-path PATH $1/bin
+setenv  HYDJETDIR $1
+setenv  HYDJET_VERSION $2
+prepend-path PATH $1
 
 EOF
 }
@@ -85,7 +79,7 @@ if [ ! -d "$working_dir" ]; then
     echo "[error] $working_dir does not exist."
 else
     version=$1
-    [ -z $version ] && version=8223
+    [ -z $version ] && version=2_3
     install_dir="$working_dir/$version"
 
     cd $working_dir
@@ -93,8 +87,8 @@ else
     echo "[i] will install to: $install_dir"
     echo "[i] install for PYTHIA version $version"
 
-    fdfile="pythia$version.tgz"
-    srcdir="pythia$version"
+	fdfile="HYDJET++$version.ZIP"
+    srcdir="hydjet$version"
     echo "[i] file to download: $fdfile"
     echo "[i] source sub dir: $srcdir"
     if [ -e "./downloads/$fdfile" ]; then
@@ -102,19 +96,24 @@ else
     else
         mkdir -p ./downloads
         cd ./downloads
-        wget http://home.thep.lu.se/~torbjorn/pythia8/$fdfile
+		wget http://lokhtin.web.cern.ch/lokhtin/hydjet++/$fdfile
         cd -
     fi
-    tar xvf ./downloads/$fdfile
-    cd $srcdir
+    pwd
+    mkdir -p $install_dir
+    cd $install_dir
+    unzip $working_dir/downloads/$fdfile
+    pwd
+    # exec_configure $install_dir
+    sed -i '' "/F77LIBSO      =/c\\
+    F77LIBSO      =-L/usr/lib -L/usr/local/lib -L/usr/local/gfortran/lib -lgfortran
+    " Makefile
 
     [ "$2" = "clean" ] && make clean
+    make
+    # && make install
 
-    exec_configure $install_dir
-
-    make && make install
-
-    chmod +x $install_dir/bin/pythia8-config
+    # chmod +x $install_dir/bin/hydjet8-config
 
     write_setup_script $install_dir $version
     write_module_file $install_dir $version
