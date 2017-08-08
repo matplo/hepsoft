@@ -97,6 +97,13 @@ prepend-path DYLD_LIBRARY_PATH <dir>/lib
 EOL
 fi
 
+if [ -d $targetdir/lib64 ]; then
+  cat >>$modfile<<EOL
+prepend-path LD_LIBRARY_PATH <dir>/lib64"
+prepend-path DYLD_LIBRARY_PATH <dir>/lib64
+EOL
+fi
+
 [ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile
 
 sed -e "s|<dir>|$targetdir|g" -i $modfile
