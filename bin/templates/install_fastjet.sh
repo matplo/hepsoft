@@ -8,25 +8,27 @@ mkdir -p $working_dir
 
 function find_cgal()
 {
-    ext="so"
-    syst=`uname -n`
-    [ "$syst"="Darwin" ] && ext="dylib"
-    cgaldir=""
-    libpath=$1
+    local ext="so"
+    local syst=`uname -n`
+    [ ${syst} = "Darwin" ] && ext="dylib"
+    local libpath=$1
+    local result=$2
+    local cgaldir=""
     # too wild..? - ok for macports /usr/lib
     IFS=:
     for p in ${libpath}; do
-	echo " - checking for libCGAL.${ext} in ${p}"
-	libcgal="${p}/libCGAL.${ext}"
-	libcgal_lib="${p}/lib/libCGAL.${ext}"
-	if [ -e "${libcgal}" ]; then
+    	echo " - checking for libCGAL.${ext} in ${p}"
+    	local libcgal="${p}/libCGAL.${ext}"
+    	if [ -e "${libcgal}" ]; then
             echo "[i] found CGAL: ${libcgal}"
-	    cgaldir=`dirname ${p}`
-	fi
+            cgaldir=`dirname ${p}`
+            break
+    	fi
     done
-    result=$2
     if [[ "$result" ]]; then
-	eval $result=$cgaldir
+    	eval $result=$cgaldir
+    else
+        echo $cgaldir
     fi
 }
 
@@ -35,9 +37,9 @@ function exec_configure()
     cgaldep=""
     find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib:/usr/lib:/usr/local/lib" cgaldir
     if [ -z $cgaldir ]; then
-	./configure --prefix=$1
+    	./configure --prefix=$1
     else
-	./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir
+	   ./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir
     fi
 }
 
@@ -116,13 +118,15 @@ else
 
     [ "$2" = "clean" ] && make clean
 
+    [ -d $XDIR/modules/CGAL ] && module use $XDIR/modules && module load CGAL
+
     exec_configure $install_dir
 
-    make && make install
+    #make && make install
 
-    write_setup_script $install_dir $version
-    write_module_file $install_dir $version
-
+    #write_setup_script $install_dir $version
+    # write_module_file $install_dir $version
+    #$XDIR/bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $XDIR/modules/
 fi
 
 cd $savedir

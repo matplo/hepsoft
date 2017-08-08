@@ -23,6 +23,9 @@ then
 fi
 
 THISDIR=$XDIR
+[ ! -z $PATH ] && export PATH=$THISDIR:$PATH
+[ -z $PATH ] && export PATH=$THISDIR
+
 XDIR=`dirname $XDIR`
 
 [ ! -z $1 ] && XDIR=$1
@@ -43,7 +46,7 @@ do
     XDIRr="${XDIR//\//\\/}"
     FNAME=`basename $TMPLATE`
     # cat $THISDIR/$FNAME | sed "s|<dir to be set>|${XDIRr}|g" > $THISDIR/$FNAME
-    sed -e "s|<dir to be set>|${XDIRr}|" -i $THISDIR/$FNAME
+    sed -e "s|<dir to be set>|${XDIRr}|g" -i $THISDIR/$FNAME
 done
 
 cd $savedir
