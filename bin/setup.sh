@@ -42,11 +42,12 @@ fi
 templates=`find $THISDIR/templates -name "*.sh"`
 for TMPLATE in $templates
 do
-    cp $TMPLATE $THISDIR
-    XDIRr="${XDIR//\//\\/}"
+    #cp $TMPLATE $THISDIR
+    #XDIRr="${XDIR//\//\\/}"
     FNAME=`basename $TMPLATE`
-    # cat $THISDIR/$FNAME | sed "s|<dir to be set>|${XDIRr}|g" > $THISDIR/$FNAME
-    sed -e "s|<dir to be set>|${XDIRr}|g" -i "" $THISDIR/$FNAME
+    #cat $THISDIR/$FNAME | sed "s|<dir to be set>|${XDIRr}|g" > $THISDIR/$FNAME
+    #sed 's|<dir to be set>|${XDIRr}|g' $THISDIR/$FNAME
+    cat $TMPLATE | sed "s|<dir to be set>|$XDIR|g" > $THISDIR/$FNAME
 done
 
 cd $savedir
