@@ -73,8 +73,8 @@ done
 
 targetdir=`abspath $targetdir`
 outputdir=`abspath $outputdir`
-mkdir -p $outputdir
-modfile=$outputdir/${modfile_base}
+mkdir -p $outputdir/${modfile_base}
+modfile=$outputdir/${modfile_base}/$version
 echo "[i] modfile: "$modfile
 
 cat >$modfile <<EOL
@@ -88,11 +88,16 @@ set     version <version>
 setenv  <name>DIR <dir>
 setenv  <name> <dir>
 set-alias <name>_cd "cd <dir>"
-prepend-path LD_LIBRARY_PATH <dir>/lib
-prepend-path DYLD_LIBRARY_PATH <dir>/lib
-prepend-path PATH <dir>/bin
-
 EOL
+
+if [ -d $targetdir/lib ]; then
+  cat >>$modfile<<EOL
+prepend-path LD_LIBRARY_PATH <dir>/lib"
+prepend-path DYLD_LIBRARY_PATH <dir>/lib
+EOL
+fi
+
+[ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile
 
 sed -e "s|<dir>|$targetdir|g" -i $modfile
 sed -e "s|<name>|$modfile_base|g" -i $modfile
