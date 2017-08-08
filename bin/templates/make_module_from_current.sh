@@ -106,10 +106,9 @@ fi
 
 [ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile
 
-alias sedi=[ $(uname -a | cut -f 1 -d " ") = "Darwin" ] && si="-i \"\"" || si="-i''"; sed $si
-sedi -e "s|<dir>|$targetdir|g" $modfile
-sedi -e "s|<name>|$modfile_base|g" $modfile
-sedi -e "s|<version>|$version|g" $modfile
+sed -i "" -e "s|<dir>|$targetdir|g" $modfile
+sed -i "" -e "s|<name>|$modfile_base|g" $modfile
+sed -i "" -e "s|<version>|$version|g" $modfile
 
 echo "if { [ module-info mode load ] } {" >> $modfile
 mpaths=`module -t avail 2>&1 | grep : | sed "s|:||g"`

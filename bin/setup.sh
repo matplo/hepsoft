@@ -42,12 +42,16 @@ fi
 templates=`find $THISDIR/templates -name "*.sh"`
 for TMPLATE in $templates
 do
-    #cp $TMPLATE $THISDIR
-    #XDIRr="${XDIR//\//\\/}"
+    cp $TMPLATE $THISDIR
+    XDIRr="${XDIR//\//\\/}"
     FNAME=`basename $TMPLATE`
-    #cat $THISDIR/$FNAME | sed "s|<dir to be set>|${XDIRr}|g" > $THISDIR/$FNAME
-    #sed 's|<dir to be set>|${XDIRr}|g' $THISDIR/$FNAME
-    cat $TMPLATE | sed "s|<dir to be set>|$XDIR|g" > $THISDIR/$FNAME
+    syst=$(uname -a | cut -f 1 -d " ")
+    if [ ${syst} = "Darwin" ]; then
+        sed -i '' "s|<dir to be set>|${XDIRr}|g" $THISDIR/$FNAME
+    else
+        sed -i "s|<dir to be set>|${XDIRr}|g" $THISDIR/$FNAME
+        sed -i 's|sed -i ""|sed -i |g' $THISDIR/$FNAME
+    fi
 done
 
 cd $savedir
