@@ -46,7 +46,7 @@ do
     XDIRr="${XDIR//\//\\/}"
     FNAME=`basename $TMPLATE`
     # cat $THISDIR/$FNAME | sed "s|<dir to be set>|${XDIRr}|g" > $THISDIR/$FNAME
-    sed -e "s|<dir to be set>|${XDIRr}|g" -i $THISDIR/$FNAME
+    sed -e "s|<dir to be set>|${XDIRr}|g" -i "" $THISDIR/$FNAME
 done
 
 cd $savedir

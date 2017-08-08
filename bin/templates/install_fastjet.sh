@@ -9,11 +9,11 @@ mkdir -p $working_dir
 function find_cgal()
 {
     local ext="so"
-    local syst=`uname -n`
+    local syst=$(uname -a | cut -f 1 -d " ")
     [ ${syst} = "Darwin" ] && ext="dylib"
     local libpath=$1
     local result=$2
-    local cgaldir=""
+    local _cgaldir=""
     # too wild..? - ok for macports /usr/lib
     IFS=:
     for p in ${libpath}; do
@@ -21,14 +21,14 @@ function find_cgal()
     	local libcgal="${p}/libCGAL.${ext}"
     	if [ -e "${libcgal}" ]; then
             echo "[i] found CGAL: ${libcgal}"
-            cgaldir=`dirname ${p}`
+            _cgaldir=`dirname ${p}`
             break
     	fi
     done
     if [[ "$result" ]]; then
-    	eval $result=$cgaldir
+    	eval $result=$_cgaldir
     else
-        echo $cgaldir
+        echo $_cgaldir
     fi
 }
 
@@ -36,14 +36,20 @@ function exec_configure()
 {
     cgaldep=""
     if [ -z $CGALDIR ]; then
+        which brew 2&>1 > /dev/null
+        if (($?)) ; then
+            brew_cgal_dir=$(dirname $(brew list cgal | grep libCGAL.dylib | sed 's|/libCGAL.dylib||' ))
+            LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${brew_cgal_dir}/lib:${brew_cgal_dir}/lib64
+        fi
         find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib:/usr/lib:/usr/local/lib" cgaldir
+        echo $cgaldir
     else
         cgaldir=$CGALDIR
     fi
     if [ -z $cgaldir ]; then
-    	./configure --prefix=$1
+        ./configure --prefix=$1
     else
-	   ./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir
+        ./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir
     fi
 }
 
@@ -127,11 +133,11 @@ else
 
     exec_configure $install_dir
 
-    #make && make install
+    make && make install
 
-    #write_setup_script $install_dir $version
+    write_setup_script $install_dir $version
     # write_module_file $install_dir $version
-    #$XDIR/bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $XDIR/modules/
+    $XDIR/bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $XDIR/modules/
 fi
 
 cd $savedir

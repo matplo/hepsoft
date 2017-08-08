@@ -6,39 +6,9 @@ XDIR="<dir to be set>"
 working_dir="$XDIR/fjcontrib"
 mkdir -p $working_dir
 
-function find_cgal()
-{
-    ext="so"
-    syst=`uname -n`
-    [ "$syst"="Darwin" ] && ext="dylib"
-    cgaldir=""
-    libpath=$1
-    # too wild..? - ok for macports /usr/lib
-    IFS=:
-    for p in ${libpath}; do
-	echo " - checking for libCGAL.${ext} in ${p}"
-	libcgal="${p}/libCGAL.${ext}"
-	libcgal_lib="${p}/lib/libCGAL.${ext}"
-	if [ -e "${libcgal}" ]; then
-            echo "[i] found CGAL: ${libcgal}"
-	    cgaldir=`dirname ${p}`
-	fi
-    done
-    result=$2
-    if [[ "$result" ]]; then
-	eval $result=$cgaldir
-    fi
-}
-
 function exec_configure()
 {
-    cgaldep=""
-    find_cgal "${LD_LIBRARY_PATH}:${DYLD_LIBRARY_PATH}:/opt/local/lib" cgaldir
-    if [ -z $cgaldir ]; then
 	./configure --prefix=$1 CXXFLAGS="-shared -fPIC"
-    else
-	./configure --prefix=$1 --enable-cgal --with-cgaldir=$cgaldir CXXFLAGS="-shared -fPIC"
-    fi
 }
 
 if [ ! -d "$working_dir" ]; then

@@ -106,9 +106,9 @@ fi
 
 [ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile
 
-sed -e "s|<dir>|$targetdir|g" -i $modfile
-sed -e "s|<name>|$modfile_base|g" -i $modfile
-sed -e "s|<version>|$version|g" -i $modfile
+sed -e "s|<dir>|$targetdir|g" -i "" $modfile
+sed -e "s|<name>|$modfile_base|g" -i "" $modfile
+sed -e "s|<version>|$version|g" -i "" $modfile
 
 echo "if { [ module-info mode load ] } {" >> $modfile
 mpaths=`module -t avail 2>&1 | grep : | sed "s|:||g"`
