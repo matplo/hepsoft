@@ -16,7 +16,7 @@ rm -rf ${build_dir}
 mkdir -p ${build_dir}
 cd $build_dir
 
-module load modules cmake gcc boost
+[ $(uname -n | cut -c 1-4) = "pdsf" ] && module load modules cmake gcc boost
 
 cmake -DCMAKE_INSTALL_PREFIX=$cdir/$version -DCMAKE_BUILD_TYPE=Release ${unpack_dir}
 make -j all
