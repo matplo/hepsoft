@@ -42,7 +42,8 @@ do
     cp $TMPLATE $THISDIR
     XDIRr="${XDIR//\//\\/}"
     FNAME=`basename $TMPLATE`
-    sed -i "" -e "s/<dir to be set>/${XDIRr}/" $THISDIR/$FNAME
+    # cat $THISDIR/$FNAME | sed "s|<dir to be set>|${XDIRr}|g" > $THISDIR/$FNAME
+    sed -e "s|<dir to be set>|${XDIRr}|" -i $THISDIR/$FNAME
 done
 
 cd $savedir
