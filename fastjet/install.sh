@@ -21,8 +21,7 @@ rm -rf $install_dir
 make clean
 # ./configure --prefix=$install_dir --enable-cgal --with-cgaldir=${CGALDIR}
 ./configure --prefix=$install_dir
-make -j
-make install
+make -j && make install
 $cdir/../bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $cdir/../modules/
 
 cd $cdir
