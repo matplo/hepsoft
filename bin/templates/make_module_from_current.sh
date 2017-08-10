@@ -92,14 +92,14 @@ EOL
 
 if [ -d $targetdir/lib ]; then
   cat >>$modfile<<EOL
-prepend-path LD_LIBRARY_PATH <dir>/lib"
+prepend-path LD_LIBRARY_PATH <dir>/lib
 prepend-path DYLD_LIBRARY_PATH <dir>/lib
 EOL
 fi
 
 if [ -d $targetdir/lib64 ]; then
   cat >>$modfile<<EOL
-prepend-path LD_LIBRARY_PATH <dir>/lib64"
+prepend-path LD_LIBRARY_PATH <dir>/lib64
 prepend-path DYLD_LIBRARY_PATH <dir>/lib64
 EOL
 fi
