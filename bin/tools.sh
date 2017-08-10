@@ -107,5 +107,5 @@ function sedi()
 function strip_root_dir()
 {
 	local _this_dir=$PWD
-	[ $(os_darwin) ]
+	echo $(echo $_this_dir | sed "s|${up_dir}||" | sed "s|/||")
 }

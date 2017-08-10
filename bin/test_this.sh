@@ -28,3 +28,5 @@ sedi s:text:changedtext:g $test_file
 
 cat $test_file
 rm $test_file
+
+echo "[i] strip root dir gives:"$(strip_root_dir)
