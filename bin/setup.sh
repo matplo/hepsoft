@@ -64,6 +64,7 @@ do
     echo $t
     new_file=$(dirname $t)/new_intall.sh
     sed "/#sourcetools/c\source ${THISDIR}/tools.sh" $t > $new_file
+    chmod +x $new_file
     echo "[i] $new_file created."
 done
 echo "[i] done."
