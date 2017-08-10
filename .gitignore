@@ -1,14 +1,3 @@
-/fastjet
-/fjcontrib
-/hepmc
-/lhapdf
-/pythia
 /modules
 /scripts
 /logs
-/rootgit*
-/root
-/tglaubermc
-/POWHEGV2
-/powheg
-/hydjet
