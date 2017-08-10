@@ -4,9 +4,9 @@ cdir=$PWD
 
 modules_dir=$(dirname $cdir)/modules
 module use $modules_dir
-# [ $(uname -n | cut -c 1-4) = "pdsf" ] && module load CGAL/4.10
-[ $(uname -n | cut -c 1-4) = "pdsf" ] && module load gcc python 
-module load hepmc lhapdf
+[ $(uname -n | cut -c 1-4) = "pdsf" ] && module load CGAL/4.10 root/v5-34-34
+# [ $(uname -n | cut -c 1-4) = "pdsf" ] && module load gcc python 
+module load hepmc lhapdf root fastjet
 module list
 
 [ -z "$LHAPDFDIR" ] && echo "[error] needs LHAPDFDIR" && exit 1
@@ -43,7 +43,7 @@ fi
 make -j && make install
 
 chmod +x $install_dir/bin/pythia8-config
-$cdir/../bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $cdir/../modules/
+$cdir/../bin/make_module_from_current.sh -d $install_dir -n pythia -v $version -o $cdir/../modules/
 
 cd $cdir
 
