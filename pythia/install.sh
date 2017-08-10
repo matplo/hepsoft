@@ -2,10 +2,38 @@
 
 cdir=$PWD
 
-modules_dir=$(dirname $cdir)/modules
+function abspath()
+{
+  case "${1}" in
+    [./]*)
+    echo "$(cd ${1%/*}; pwd)/${1##*/}"
+    ;;
+    *)
+    echo "${PWD}/${1}"
+    ;;
+  esac
+}
+
+function thisdir()
+{
+        THISFILE=`abspath $BASH_SOURCE`
+        XDIR=`dirname $THISFILE`
+        if [ -L ${THISFILE} ];
+        then
+            target=`readlink $THISFILE`
+            XDIR=`dirname $target`
+        fi
+
+        THISDIR=$XDIR
+        echo $THISDIR
+}
+
+hepsoft_dir=$(dirname $(thisdir))
+
+modules_dir=${hepsoft_dir}/modules
 module use $modules_dir
 [ $(uname -n | cut -c 1-4) = "pdsf" ] && module load CGAL/4.10 root/v5-34-34
-# [ $(uname -n | cut -c 1-4) = "pdsf" ] && module load gcc python 
+# [ $(uname -n | cut -c 1-4) = "pdsf" ] && module load gcc python
 module load hepmc lhapdf root fastjet
 module list
 
@@ -32,17 +60,28 @@ if [ -e $(which root-config) ]; then
 	--with-root-lib=$rsyslib \
 	--with-root-include=$rsysinc \
 	--with-hepmc2=$HEPMCDIR \
-	--with-fastjet3=$fjpath
+	--with-fastjet3=$fjpath \
+	--with-python
 else
     ./configure --prefix=$install_dir \
 	--enable-shared \
 	--with-hepmc2=$HEPMCDIR \
-	--with-fastjet3=$fjpath
+	--with-fastjet3=$fjpath \
+	--with-python
 fi
 
 make -j && make install
 
 chmod +x $install_dir/bin/pythia8-config
+
+ftopatch=$install_dir/share/Pythia8/examples/Makefile.inc
+if [ -e $ftopatch ]; then
+	echo "[i] patching $ftopatch..."
+	${hepsoft_dir}/bin/sedi.sh "s|-std=c++98||g" $ftopatch
+fi
+echo "[i] testing pythia8-config..."
+$install_dir/bin/pythia8-config --libs
+
 $cdir/../bin/make_module_from_current.sh -d $install_dir -n pythia -v $version -o $cdir/../modules/
 
 cd $cdir
