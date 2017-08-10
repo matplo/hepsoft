@@ -10,7 +10,7 @@ cdir=$PWD
 modules_dir=$(dirname $cdir)/modules
 module use $modules_dir
 if [ $(uname -n | cut -c 1-4) = "pdsf" ]; then
-    module load gcc python cmake/3.9.0
+    module load git gcc python cmake/3.9.0
     #module load cmake git
 fi
 module list
@@ -25,7 +25,7 @@ echo "[i] version is $version"
 git_dir=$cdir/root
 [ ! -d $git_dir ] && git clone http://root.cern.ch/git/root.git
 cd $git_dir
-git checkout -b $version $version
+[ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) != ${version} ] && echo "[i] checking out $version" && git checkout -b $version $version
 
 config_opts=
 if [ $(uname -n | cut -c 1-4) = "pdsf" ];
@@ -38,8 +38,7 @@ bdir="${cdir}/build_${version}"
 mkdir -p $bdir && cd $bdir && cmake $git_dir $config_opts
 cd $bdir && cmake --build .
 cd $bdir && cmake -DCMAKE_INSTALL_PREFIX=$install_dir -P cmake_install.cmake
-$cdir/../bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $cdir/../modules/
+
+$cdir/../bin/make_module_from_current.sh -d $install_dir -n root -v $version -o $cdir/../modules/
 
 cd $cdir
-
-
