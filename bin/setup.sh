@@ -39,7 +39,7 @@ else
     echo "[error] $XDIR does not exist. stop here."
 fi
 
-templates=`find $THISDIR/templates -name "*.sh"`
+templates=`find $THISDIR/templates -name "make*.sh"`
 for TMPLATE in $templates
 do
     cp $TMPLATE $THISDIR
@@ -54,4 +54,17 @@ do
     fi
 done
 
+source $THISDIR/tools.sh
+echo $THISDIR
+echo "[i] finding templates..."
+templates=$(find $THISDIR/../ -maxdepth 2 -name "_install.sh")
+echo "[i] processing..."
+for t in $templates
+do
+    echo $t
+    new_file=$(dirname $t)/new_intall.sh
+    sed "/#sourcetools/c\source ${THISDIR}/tools.sh" $t > $new_file
+    echo "[i] $new_file created."
+done
+echo "[i] done."
 cd $savedir

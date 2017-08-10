@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source /project/projectdirs/alice/ploskon/software/hepsoft/bin/tools.sh
+#source /project/projectdirs/alice/ploskon/software/hepsoft/bin/tools.sh
+#sourcetools
 
 pdsf_modules="gcc python cmake/3.9.0"
 
