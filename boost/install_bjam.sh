@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /project/projectdirs/alice/ploskon/software/hepsoft/bin/tools.sh
+
 cdir=$PWD
 clean=
 version=$1
