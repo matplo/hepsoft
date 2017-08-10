@@ -61,12 +61,14 @@ if [ -e $(which root-config) ]; then
 	--with-root-include=$rsysinc \
 	--with-hepmc2=$HEPMCDIR \
 	--with-fastjet3=$fjpath \
+    --with-lhapdf5=$LHAPDFDIR \
 	--with-python
 else
     ./configure --prefix=$install_dir \
 	--enable-shared \
 	--with-hepmc2=$HEPMCDIR \
 	--with-fastjet3=$fjpath \
+    --with-lhapdf5=$LHAPDFDIR \
 	--with-python
 fi
 
