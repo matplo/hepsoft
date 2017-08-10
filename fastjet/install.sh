@@ -13,19 +13,18 @@ install_dir=$cdir/$version
 
 modules_dir=$(dirname $cdir)/modules
 module use $modules_dir
- [ $(uname -n | cut -c 1-4) = "pdsf" ] && module load CGAL/4.10
+[ $(uname -n | cut -c 1-4) = "pdsf" ] && module load CGAL/4.10
 #[ $(uname -n | cut -c 1-4) = "pdsf" ] && module load gcc python
 module list
 
 rm -rf $install_dir
 #make clean
-boost_libs=$(find $boostDIR/lib/ -name "*.so" -exec echo -l{} \; | sed "s|${boost}/lib/lib||g" | sed "s|.so||g" | xargs echo -n)
-boost_libs=$(find $boostDIR/lib/ -name "*.so" -exec echo -L{} \; | xargs echo -n)
-#./configure --prefix=${install_dir} --enable-cgal --with-cgaldir=${CGALDIR} LDFLAGS=-Wl,-rpath,${boostDIR}/lib CPPFLAGS=-I${boostDIR}/include
-./configure --prefix=${install_dir} --enable-cgal --with-cgaldir=${CGALDIR} LDFLAGS=-Wl,-rpath,${boostDIR}/lib CXXFLAGS=-I${boostDIR}/include
-#./configure --prefix=${install_dir} --enable-cgal --with-cgaldir=${CGALDIR} LDFLAGS=-L${boostDIR}/lib LIBS="\"${boost_libs}\"" CPPFLAGS=-I${boostDIR}/include
-#./configure --prefix=${install_dir} --enable-cgal --with-cgaldir=${CGALDIR} LT_SYS_LIBRARY_PATH=${boostDIR}/lib:$LT_SYS_LIBRARY_PATH CPPFLAGS=-I${boostDIR}/include
-#./configure --prefix=$install_dir
+if [ ! -z $CGALDIR ]; then
+    ./configure --prefix=${install_dir} --enable-cgal --with-cgaldir=${CGALDIR} LDFLAGS=-Wl,-rpath,${boostDIR}/lib CXXFLAGS=-I${boostDIR}/include CPPFLAGS=-I${boostDIR}/include
+else
+    ./configure --prefix=${install_dir} --enable-cgal
+fi
+
 make -j && make install
 $cdir/../bin/make_module_from_current.sh -d $install_dir -n fastjet -v $version -o $cdir/../modules/
 
