@@ -72,7 +72,7 @@ function os_linux()
 	if [ $_system == "Linux" ]; then
 		echo "yes"
 	else
-		echo 0
+		echo
 	fi
 }
 
@@ -112,4 +112,13 @@ function module_name()
 {
 	local _this_dir=$1
 	echo $(dirname $(echo $_this_dir | sed "s|${up_dir}||" | sed "s|/||" | sed "s|.||"))
+}
+
+function n_cores()
+{
+	local _ncores="1"
+	[ $(os_darwin) ] && local _ncores=$(system_profiler SPHardwareDataType | grep "Number of Cores" | cut -f 2 -d ":" | sed 's| ||')
+	[ $(os_linux) ] && local _ncores=$(lscpu | grep "CPU(s):" | head -n 1 | cut -f 2 -d ":" | sed 's| ||g')
+	#[ ${_ncores} -gt "1" ] && retval=$(_ncores-1)
+	echo ${_ncores}
 }

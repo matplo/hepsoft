@@ -70,6 +70,7 @@ do
 done
 echo "[i] done."
 
-[ ! -d ${HEPSOFTDIR} ] && mkdir -v ${HEPSOFTDIR}/modules
+echo "[i] HEPSOFTDIR: ${HEPSOFTDIR}"
+[ ! -d "${HEPSOFTDIR}/modules" ] && mkdir -pv ${HEPSOFTDIR}/modules
 
 cd $savedir
