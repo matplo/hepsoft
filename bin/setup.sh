@@ -55,17 +55,21 @@ do
 done
 
 source $THISDIR/tools.sh
+HEPSOFTDIR=$(dirname ${THISDIR})
 echo $THISDIR
 echo "[i] finding templates..."
-templates=$(find $THISDIR/../ -maxdepth 2 -name "_install.sh")
+templates=$(find ${HEPSOFTDIR} -maxdepth 2 -name "_install.sh")
 echo "[i] processing..."
 for t in $templates
 do
-    echo $t
     new_file=$(dirname $t)/new_intall.sh
-    sed "/#sourcetools/c\source ${THISDIR}/tools.sh" $t > $new_file
+    #sed "/<hepsoft>/c\${HEPSOFTDIR}" $t > $new_file
+    sed "s|<hepsoft>|${HEPSOFTDIR}|g" $t > $new_file
     chmod +x $new_file
-    echo "[i] $new_file created."
+    echo "    -> $new_file created."
 done
 echo "[i] done."
+
+[ ! -d ${HEPSOFTDIR} ] && mkdir -v ${HEPSOFTDIR}/modules
+
 cd $savedir

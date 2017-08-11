@@ -49,16 +49,14 @@ function get_opt_with()
 
 function is_opt_set()
 {
-	local do_echo=
-	local retval=0
+	local retval=
 	for g in $global_args
 	do
 		if [[ ${g:0:1} != "-" ]]; then
 			continue
 		fi
 		if [ $g == $1 ]; then
-			do_echo="yes"
-			retval=1
+			retval="yes"
 		fi
 	done
 	echo $retval
@@ -106,6 +104,12 @@ function sedi()
 
 function strip_root_dir()
 {
-	local _this_dir=$PWD
+	local _this_dir=$1
 	echo $(echo $_this_dir | sed "s|${up_dir}||" | sed "s|/||")
+}
+
+function module_name()
+{
+	local _this_dir=$1
+	echo $(dirname $(echo $_this_dir | sed "s|${up_dir}||" | sed "s|/||" | sed "s|.||"))
 }
