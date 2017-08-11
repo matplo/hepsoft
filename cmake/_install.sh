@@ -39,7 +39,7 @@ else
 fi
 module list
 
-if [ "$do_download"="yes" ]; then
+if [ $do_download ]; then
 	echo $do_download
 	cd ${module_dir}
 	rm -rf ${local_file}
@@ -47,7 +47,7 @@ if [ "$do_download"="yes" ]; then
 	cd $wdir
 fi
 
-if [ "${do_clean}"="yes" ]; then
+if [ $do_clean ]; then
 	cd ${module_dir}
 	echo "[i] cleaning ${unpack_dir}..."
 	rm -rf ${unpack_dir}
@@ -55,7 +55,7 @@ if [ "${do_clean}"="yes" ]; then
 	cd $wdir
 fi
 
-if [ "${do_build}"="yes" ]; then
+if [ $do_build ]; then
 	cd ${module_dir}
 	[ ! -e $local_file ] && echo "[e] file $local_file does not exist" && exit 1
 	echo "[i] unpacking..."
