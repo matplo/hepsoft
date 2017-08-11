@@ -122,3 +122,22 @@ function n_cores()
 	#[ ${_ncores} -gt "1" ] && retval=$(_ncores-1)
 	echo ${_ncores}
 }
+
+function config_value()
+{
+	local _what=$1
+	local _retval=
+	local _config=$up_dir/config/versions.cfg
+	if [ ! -z ${_what} ]; then
+		local _nlines=$(cat ${_config} | wc -l)
+		_nlines=$((_nlines+1))
+		for ln in $(seq 1 ${_nlines})
+		do
+			_line=$(head -n ${ln} ${_config} | tail -n 1)
+			_pack=$(echo ${_line} | grep ${_what} | cut -f 1 -d "=" | sed 's| ||g')
+			_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's| ||g')
+			[ "${_pack}" == "${_what}" ] && _retval=${_val}
+		done
+	fi
+	echo ${_retval}
+}

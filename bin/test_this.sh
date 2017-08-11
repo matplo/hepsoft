@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source /project/projectdirs/alice/ploskon/software/hepsoft/bin/tools.sh
+this_dir=$(dirname $BASH_SOURCE)
+source $this_dir/tools.sh
 
 echo "arg with -a: "$(get_opt_with -a)
 echo "is -a set? "$(is_opt_set -a)
@@ -30,3 +31,7 @@ cat $test_file
 rm $test_file
 
 echo "[i] strip root dir gives:"$(strip_root_dir)
+
+get_value boost_deps
+get_value cmake
+

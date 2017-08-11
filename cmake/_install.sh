@@ -6,7 +6,7 @@ wdir=${hepsoft_dir}
 savedir=$PWD
 cd $wdir
 source ${hepsoft_dir}/bin/tools.sh
-pdsf_modules="gcc python qt"
+pdsf_modules=$(config_value cmake_pdsf_modules)
 module_name=$(module_name $BASH_SOURCE)
 module_dir=${hepsoft_dir}/${module_name}
 do_clean=$(is_opt_set --clean)
@@ -22,7 +22,7 @@ version=$(get_opt_with --version)
 unpack_dir=${module_dir}/${module_name}-${version}
 install_dir=${module_dir}/${version}
 local_file=cmake-${version}.tar.gz
-remote_file=https://cmake.org/files/v3.9/${local_file}
+remote_file=$(config_value cmake_http_dir)/${local_file}
 
 echo "[i] module_name    : " $module_name
 echo "[i] version        : " $version
