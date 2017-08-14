@@ -126,7 +126,7 @@ function n_cores()
 function config_value()
 {
 	local _what=$1
-	local _retval=
+	local _retval="querying an unset config setting: ${_what}"
 	local _config=$up_dir/config/versions.cfg
 	if [ ! -z ${_what} ]; then
 		local _nlines=$(cat ${_config} | wc -l)
@@ -134,10 +134,25 @@ function config_value()
 		for ln in $(seq 1 ${_nlines})
 		do
 			_line=$(head -n ${ln} ${_config} | tail -n 1)
-			_pack=$(echo ${_line} | grep ${_what} | cut -f 1 -d "=" | sed 's| ||g')
-			_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's| ||g')
+			#_pack=$(echo ${_line} | grep ${_what} | cut -f 1 -d "=" | sed 's| ||g')
+			#_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's| ||g')
+			_pack=$(echo ${_line} | grep ${_what} | cut -f 1 -d "=" | sed 's/^ *//g' | sed 's/ *$//g')
+			_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's/^ *//g' | sed 's/ *$//g')
 			[ "${_pack}" == "${_what}" ] && _retval=${_val}
 		done
 	fi
 	echo ${_retval}
+}
+
+function echo_common_settings()
+{
+	echo "[i] module_name    : " $module_name
+	echo "[i] version        : " $version
+	echo "[i] local_file     : " $local_file
+	echo "[i] do_download    : " $do_download
+	echo "[i] do_clean       : " $do_clean
+	echo "[i] do_build       : " $do_build
+	echo "[i] do_make_module : " $do_make_module
+	echo "[i] module deps    : " $module_deps
+	echo "[i] w/ make use -j : " $(n_cores)
 }

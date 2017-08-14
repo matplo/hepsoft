@@ -6,31 +6,25 @@ wdir=${hepsoft_dir}
 savedir=$PWD
 cd $wdir
 source ${hepsoft_dir}/bin/tools.sh
-pdsf_modules=$(config_value cmake_pdsf_modules)
 module_name=$(module_name $BASH_SOURCE)
+	pdsf_modules=$(config_value ${module_name}_pdsf_modules)
+module_deps=$(config_value ${module_name}_deps)
 module_dir=${hepsoft_dir}/${module_name}
 do_clean=$(is_opt_set --clean)
 do_build=$(is_opt_set --build)
 do_make_module=$(is_opt_set --module)
 do_download=$(is_opt_set --download)
 enable_qt=$(is_opt_set --qt-gui)
+version=$(get_opt_with --version)
+[ -z $version ] && version=$(config_value ${module_name})
+unpack_dir=${module_dir}/${module_name}-${version}
+install_dir=${module_dir}/${version}
+local_file=${module_name}-${version}.tar.gz
+remote_file=$(config_value ${module_name}_http_dir)/${local_file}
 
 [ $(is_opt_set --all) ] && do_clean="yes" && do_build="yes" && do_make_module="yes" && do_download="yes"
 
-version=$(get_opt_with --version)
-[ -z $version ] && version=3.9.1
-unpack_dir=${module_dir}/${module_name}-${version}
-install_dir=${module_dir}/${version}
-local_file=cmake-${version}.tar.gz
-remote_file=$(config_value cmake_http_dir)/${local_file}
-
-echo "[i] module_name    : " $module_name
-echo "[i] version        : " $version
-echo "[i] local_file     : " $local_file
-echo "[i] do_download    : " $do_download
-echo "[i] do_clean       : " $do_clean
-echo "[i] do_build       : " $do_build
-echo "[i] do_make_module : " $do_make_module
+echo_common_settings
 echo "[i] enable qt      : " $enable_qt
 
 module use ${hepsoft_dir}/modules
