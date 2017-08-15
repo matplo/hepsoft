@@ -59,11 +59,13 @@ HEPSOFTDIR=$(dirname ${THISDIR})
 echo $THISDIR
 echo "[i] finding templates..."
 # templates=$(find ${HEPSOFTDIR} -maxdepth 2 -name "_install.sh")
-config_ordered_modules=$(cat ${HEPSOFTDIR}/config/versions.cfg | grep -v "_" | cut -f 1 -d "=" | grep .)
+config_ordered_modules=$(cat ${HEPSOFTDIR}/config/versions.cfg | cut -f 1 -d "=" | grep .)
+echo $config_ordered_modules
 echo "[i] processing..."
 #for t in $templates
 for t in $config_ordered_modules
 do
+    [ ! -f ${HEPSOFTDIR}/${t}/_install.sh ] && continue
     #new_file=$(dirname $t)/install.sh
     new_file="${HEPSOFTDIR}/${t}/install.sh"
     #sed "/<hepsoft>/c\${HEPSOFTDIR}" $t > $new_file

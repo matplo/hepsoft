@@ -192,7 +192,12 @@ function process_modules()
 		module load ${pdsf_modules}
 		[ $? != 0 ] && exit 1
 	else
-		echo "[i] no extra modules loaded"
+		if [ ! -z ${module_deps} ]; then
+			module load ${module_deps}
+			[ $? != 0 ] && exit 1
+		else
+			echo "[i] no extra modules loaded"
+		fi
 	fi
 	module list
 }
