@@ -123,6 +123,17 @@ function n_cores()
 	echo ${_ncores}
 }
 
+function executable_from_path()
+{
+	# this thing does NOT like the aliases
+	local _exec=$(which $1 | grep -v "alias" | cut -f 2)
+	if [ ${_exec} ]; then
+		echo ${_exec}
+	else
+		echo ""
+	fi
+}
+
 function config_value()
 {
 	local _what=$1
@@ -144,13 +155,130 @@ function config_value()
 	echo ${_retval}
 }
 
+function process_variables()
+{
+	[ -z $1 ] && "[e] process_variables called w/o argument - should be: BASH_SOURCE"
+	wdir=${hepsoft_dir}
+	module_name=$(module_name $1)
+	pdsf_modules=$(config_value ${module_name}_pdsf_modules)
+	module_deps=$(config_value ${module_name}_deps)
+	module_dir=${hepsoft_dir}/${module_name}
+	do_clean=$(is_opt_set --clean)
+	do_rebuild=$(is_opt_set --rebuild)
+	do_build=$(is_opt_set --build)
+	[ $do_rebuild ] && do_build=$do_rebuild
+	do_make_module=$(is_opt_set --module)
+	do_download=$(is_opt_set --download)
+	version=$(get_opt_with --version)
+	[ -z $version ] && version=$(config_value ${module_name})
+	unpack_dir=${module_dir}/${module_name}-${version}
+	build_dir=${module_dir}/build_${version}
+	install_dir=${module_dir}/${version}
+	local_file=${module_dir}/${module_name}-${version}.tar.gz
+	#remote_file=$(config_value ${module_name}_http_dir)/${local_file}
+	remote_dir=$(config_value ${module_name}_remote_dir)
+	remote_file=$(config_value ${module_name}_remote_file)
+	[ $(is_opt_set --all) ] && do_clean="yes" && do_build="yes" && do_make_module="yes" && do_download="yes"
+	system_64_bit=$(uname -m | cut -f 2 -d "_" | grep 64)
+}
+
+function process_modules()
+{
+	module use ${hepsoft_dir}/modules
+	if [ $(host_pdsf) ]; then
+		echo "[i] pdsf_modules   : " $pdsf_modules
+		module load ${pdsf_modules}
+		[ $? != 0 ] && exit 1
+	else
+		echo "[i] no extra modules loaded"
+	fi
+	module list
+}
+
+function prep_build()
+{
+	if [ $do_download ]; then
+		cd ${module_dir}
+		rm ${local_file}
+		wget ${remote_file} --no-check-certificate -O ${local_file}
+		cd $wdir
+	fi
+
+	if [ -e ${local_file} ]; then
+		_local_dir=$(tar tfz ${local_file} --exclude '*/*' | head -n 1)
+		[ ${_local_dir} == "." ] && echo "[e] bad _local_dir ${_local_dir}. stop." && exit 1
+		[ -z ${_local_dir} ] && echo "[e] bad _local_dir EMPTY. stop." && exit 1
+		unpack_dir=${module_dir}/${_local_dir}
+		echo "[i] changed unpack_dir to ${unpack_dir}"
+	else
+		echo "[w] local file does not exist? ${local_file}"
+	fi
+
+	if [ $do_clean ]; then
+		cd ${module_dir}
+		if [ -d ${unpack_dir} ]; then
+			echo "[i] cleaning ${unpack_dir}..."
+			rm -r ${unpack_dir}
+		fi
+		if [ -d ${build_dir} ]; then
+			echo "[i] cleaning ${build_dir}..."
+			rm -r ${build_dir}
+		fi
+		echo "[i] done cleaning."
+		cd $wdir
+	fi
+
+	mkdir -pv ${build_dir}
+}
+
+function exec_build()
+{
+	if [ $do_build ]; then
+		echo "[i] building..."
+		cd ${module_dir}
+		[ ! -e ${local_file} ] && echo "[e] file ${local_file} does not exist" && exit 1
+		if [ ! -d ${unpack_dir} ]; then
+			echo "[i] unpacking..."
+			tar zxvf $local_file 2>&1 > /dev/null
+		fi
+		[ ! -d ${unpack_dir} ] && echo "[e] dir ${unpack_dir} does not exist" && exit 1
+		cd ${unpack_dir}
+		if [ $do_clean ]; then
+			rm -r ${install_dir}
+		else
+			if [ ! $do_rebuild ]; then
+				[ -e ${install_dir} ] && echo "[e] ${install_dir} exists. remove it before running --build or use --rebuild or --clean. stop." && exit 1
+			fi
+		fi
+		build
+		cd $wdir
+	fi
+}
+
+function make_module()
+{
+	if [ $do_make_module ]; then
+		echo "[i] preparing a module file for ${module_name}/${version} ..."
+		${hepsoft_dir}/bin/make_module_from_current.sh -d ${install_dir} -n ${module_name} -v $version -o ${hepsoft_dir}/modules
+	fi
+}
+
 function echo_common_settings()
 {
 	echo "[i] module_name    : " $module_name
 	echo "[i] version        : " $version
+	echo "[i] module_dir     : " $module_dir
+	echo "[i] module_deps    : " $module_deps
+	echo "[i] pdsf_modules   : " $pdsf_modules
+	echo "[i] remote_file    : " $remote_file
 	echo "[i] local_file     : " $local_file
+	echo "[i] unpack_dir     : " $unpack_dir
+	echo "[i] build_dir      : " $build_dir
+	echo "[i] install_dir    : " $install_dir
+
 	echo "[i] do_download    : " $do_download
 	echo "[i] do_clean       : " $do_clean
+	echo "[i] do_rebuild     : " $do_rebuild
 	echo "[i] do_build       : " $do_build
 	echo "[i] do_make_module : " $do_make_module
 	echo "[i] module deps    : " $module_deps
