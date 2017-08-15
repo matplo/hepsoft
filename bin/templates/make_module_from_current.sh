@@ -61,9 +61,9 @@ setenv  <name>DIR <dir>
 set-alias <name>_cd "cd <dir>"
 EOL
 
-echo 'setenv <name>^^_ROOT <dir>' >> $modfile
-echo 'setenv <name>^^_DIR <dir>' >> $modfile
-echo 'setenv <name>^^DIR <dir>' >> $modfile
+echo 'setenv <name_to_upper>_ROOT <dir>' >> $modfile
+echo 'setenv <name_to_upper>_DIR <dir>' >> $modfile
+echo 'setenv <name_to_upper>DIR <dir>' >> $modfile
 
 if [ -d $targetdir/lib ]; then
   cat >>$modfile<<EOL
@@ -82,7 +82,7 @@ fi
 [ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile
 
 sedi "s|<dir>|$targetdir|g" $modfile
-sedi "s|<name>^^|${modfile_base^^}|g" $modfile
+sedi "s|<name_to_upper>|$(echo ${modfile_base} | awk '{print toupper($0)}')|g" $modfile
 sedi "s|<name>|$modfile_base|g" $modfile
 sedi "s|<version>|$version|g" $modfile
 

@@ -74,6 +74,7 @@ done
 mmscript=${HEPSOFTDIR}/bin/templates/make_module_from_current.sh
 new_file=${HEPSOFTDIR}/bin/make_module_from_current.sh
 sed "s|<hepsoft>|${HEPSOFTDIR}|g" $mmscript > $new_file
+chmod +x $new_file
 echo "    -> $new_file created."
 
 mmscript=${HEPSOFTDIR}/bin/make_modules.sh
