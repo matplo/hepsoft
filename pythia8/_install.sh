@@ -32,6 +32,9 @@ function build()
 	[ ${do_clean} ] && make clean
 	make -j $(n_cores)
 	make install
+
+	sedi "s|-std=c++98||g" ${install_dir}/share/Pythia8/examples/Makefile.inc
+	echo "[w] pathed ${install_dir}/share/Pythia8/examples/Makefile.inc"
 }
 
 exec_build

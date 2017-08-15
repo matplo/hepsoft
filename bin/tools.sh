@@ -221,11 +221,11 @@ function prep_build()
 		cd ${module_dir}
 		if [ -d ${unpack_dir} ]; then
 			echo "[i] cleaning ${unpack_dir}..."
-			rm -r ${unpack_dir}
+			rm -rf ${unpack_dir}
 		fi
 		if [ -d ${build_dir} ]; then
 			echo "[i] cleaning ${build_dir}..."
-			rm -r ${build_dir}
+			rm -rf ${build_dir}
 		fi
 		echo "[i] done cleaning."
 		cd $wdir
@@ -247,7 +247,7 @@ function exec_build()
 		[ ! -d ${unpack_dir} ] && echo "[e] dir ${unpack_dir} does not exist" && exit 1
 		cd ${unpack_dir}
 		if [ $do_clean ]; then
-			rm -r ${install_dir}
+			rm -rf ${install_dir}
 		else
 			if [ ! $do_rebuild ]; then
 				[ -e ${install_dir} ] && echo "[e] ${install_dir} exists. remove it before running --build or use --rebuild or --clean. stop." && exit 1

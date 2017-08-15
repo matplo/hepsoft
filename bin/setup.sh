@@ -58,17 +58,19 @@ source $THISDIR/tools.sh
 HEPSOFTDIR=$(dirname ${THISDIR})
 echo $THISDIR
 echo "[i] finding templates..."
-templates=$(find ${HEPSOFTDIR} -maxdepth 2 -name "_install.sh")
+# templates=$(find ${HEPSOFTDIR} -maxdepth 2 -name "_install.sh")
+config_ordered_modules=$(cat ${HEPSOFTDIR}/config/versions.cfg | grep -v "_" | cut -f 1 -d "=" | grep .)
 echo "[i] processing..."
-for t in $templates
+#for t in $templates
+for t in $config_ordered_modules
 do
-    new_file=$(dirname $t)/install.sh
+    #new_file=$(dirname $t)/install.sh
+    new_file="${HEPSOFTDIR}/${t}/install.sh"
     #sed "/<hepsoft>/c\${HEPSOFTDIR}" $t > $new_file
-    sed "s|<hepsoft>|${HEPSOFTDIR}|g" $t > $new_file
-    chmod +x $new_file
-    echo "    -> $new_file created."
+    sed "s|<hepsoft>|${HEPSOFTDIR}|g" "${HEPSOFTDIR}/${t}/_install.sh" > ${new_file}
+    chmod +x ${new_file}
+    echo "    -> ${new_file} created."
 done
-
 mmscript=${HEPSOFTDIR}/bin/templates/make_module_from_current.sh
 new_file=${HEPSOFTDIR}/bin/make_module_from_current.sh
 sed "s|<hepsoft>|${HEPSOFTDIR}|g" $mmscript > $new_file
@@ -76,7 +78,6 @@ echo "    -> $new_file created."
 
 mmscript=${HEPSOFTDIR}/bin/make_modules.sh
 rm -f $mmscript
-config_ordered_modules=$(cat ${HEPSOFTDIR}/config/versions.cfg | grep -v "_" | cut -f 1 -d "=" | grep .)
 for mod in $config_ordered_modules
 do
     echo "${HEPSOFTDIR}/${mod}/install.sh --module" >> ${mmscript}
