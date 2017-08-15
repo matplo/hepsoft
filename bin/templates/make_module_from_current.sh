@@ -1,34 +1,6 @@
 #!/bin/bash
 
-function abspath()
-{
-  case "${1}" in
-    [./]*)
-    echo "$(cd ${1%/*}; pwd)/${1##*/}"
-    ;;
-    *)
-    echo "${PWD}/${1}"
-    ;;
-  esac
-}
-
-function thisdir()
-{
-	THISFILE=`abspath $BASH_SOURCE`
-	XDIR=`dirname $THISFILE`
-	if [ -L ${THISFILE} ];
-	then
-	    target=`readlink $THISFILE`
-	    XDIR=`dirname $target`
-	fi
-
-	THISDIR=$XDIR
-	echo $THISDIR
-}
-
-#modfile_base=project
-#targetdir=`thisdir`
-#targetdir=$PWD
+source <hepsoft>/bin/tools.sh
 
 function usage()
 {
@@ -86,9 +58,12 @@ proc ModulesHelp { } {
 
 set     version <version>
 setenv  <name>DIR <dir>
-setenv  <name> <dir>
 set-alias <name>_cd "cd <dir>"
 EOL
+
+echo 'setenv <name>^^_ROOT <dir>' >> $modfile
+echo 'setenv <name>^^_DIR <dir>' >> $modfile
+echo 'setenv <name>^^DIR <dir>' >> $modfile
 
 if [ -d $targetdir/lib ]; then
   cat >>$modfile<<EOL
@@ -106,9 +81,10 @@ fi
 
 [ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile
 
-sed -i "" -e "s|<dir>|$targetdir|g" $modfile
-sed -i "" -e "s|<name>|$modfile_base|g" $modfile
-sed -i "" -e "s|<version>|$version|g" $modfile
+sedi "s|<dir>|$targetdir|g" $modfile
+sedi "s|<name>^^|${modfile_base^^}|g" $modfile
+sedi "s|<name>|$modfile_base|g" $modfile
+sedi "s|<version>|$version|g" $modfile
 
 echo "if { [ module-info mode load ] } {" >> $modfile
 mpaths=`module -t avail 2>&1 | grep : | sed "s|:||g"`

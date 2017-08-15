@@ -39,20 +39,20 @@ else
     echo "[error] $XDIR does not exist. stop here."
 fi
 
-templates=`find $THISDIR/templates -name "make*.sh"`
-for TMPLATE in $templates
-do
-    cp $TMPLATE $THISDIR
-    XDIRr="${XDIR//\//\\/}"
-    FNAME=`basename $TMPLATE`
-    syst=$(uname -a | cut -f 1 -d " ")
-    if [ ${syst} = "Darwin" ]; then
-        sed -i '' "s|<dir to be set>|${XDIRr}|g" $THISDIR/$FNAME
-    else
-        sed -i "s|<dir to be set>|${XDIRr}|g" $THISDIR/$FNAME
-        sed -i 's|sed -i ""|sed -i |g' $THISDIR/$FNAME
-    fi
-done
+# templates=`find $THISDIR/templates -name "make*.sh"`
+# for TMPLATE in $templates
+# do
+#     cp $TMPLATE $THISDIR
+#     XDIRr="${XDIR//\//\\/}"
+#     FNAME=`basename $TMPLATE`
+#     syst=$(uname -a | cut -f 1 -d " ")
+#     if [ ${syst} = "Darwin" ]; then
+#         sed -i '' "s|<dir to be set>|${XDIRr}|g" $THISDIR/$FNAME
+#     else
+#         sed -i "s|<dir to be set>|${XDIRr}|g" $THISDIR/$FNAME
+#         sed -i 's|sed -i ""|sed -i |g' $THISDIR/$FNAME
+#     fi
+# done
 
 source $THISDIR/tools.sh
 HEPSOFTDIR=$(dirname ${THISDIR})
@@ -68,6 +68,11 @@ do
     chmod +x $new_file
     echo "    -> $new_file created."
 done
+
+mmscript=${HEPSOFTDIR}/bin/templates/make_module_from_current.sh
+new_file=${HEPSOFTDIR}/bin/make_module_from_current.sh
+sed "s|<hepsoft>|${HEPSOFTDIR}|g" $mmscript > $new_file
+echo "    -> $new_file created."
 
 mmscript=${HEPSOFTDIR}/bin/make_modules.sh
 rm -f $mmscript
