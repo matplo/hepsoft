@@ -62,7 +62,7 @@ templates=$(find ${HEPSOFTDIR} -maxdepth 2 -name "_install.sh")
 echo "[i] processing..."
 for t in $templates
 do
-    new_file=$(dirname $t)/new_intall.sh
+    new_file=$(dirname $t)/install.sh
     #sed "/<hepsoft>/c\${HEPSOFTDIR}" $t > $new_file
     sed "s|<hepsoft>|${HEPSOFTDIR}|g" $t > $new_file
     chmod +x $new_file
