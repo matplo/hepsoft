@@ -68,6 +68,16 @@ do
     chmod +x $new_file
     echo "    -> $new_file created."
 done
+
+mmscript=${HEPSOFTDIR}/bin/make_modules.sh
+rm -f $mmscript
+config_ordered_modules=$(cat ${HEPSOFTDIR}/config/versions.cfg | grep -v "_" | cut -f 1 -d "=" | grep .)
+for mod in $config_ordered_modules
+do
+    echo "${HEPSOFTDIR}/${mod}/install.sh --module" >> ${mmscript}
+done
+chmod +x ${mmscript}
+echo "    -> ${mmscript} created."
 echo "[i] done."
 
 echo "[i] HEPSOFTDIR: ${HEPSOFTDIR}"

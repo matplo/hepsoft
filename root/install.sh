@@ -1,44 +1,66 @@
 #!/bin/bash
 
 savedir=$PWD
+hepsoft_dir=/project/projectdirs/alice/ploskon/software/hepsoft
+source ${hepsoft_dir}/bin/tools.sh
+process_variables $BASH_SOURCE $@
+cd $wdir
 
-optstring="bcd:ghinv:o:m"
+unpack_dir=${module_dir}/root.git
+local_file=${unpack_dir}
 
-#!/bin/bash
+echo_common_settings
+process_modules
 
-cdir=$PWD
-modules_dir=$(dirname $cdir)/modules
-module use $modules_dir
-if [ $(uname -n | cut -c 1-4) = "pdsf" ]; then
-    module load git gcc python cmake/3.9.0
-    #module load cmake git
-fi
-module list
-gcc -v
+function prep_build()
+{
+	if [ $do_clean ]; then
+		cd ${module_dir}
+		if [ -d ${unpack_dir} ]; then
+			echo "[i] cleaning ${unpack_dir}..."
+			rm -rf ${unpack_dir}
+		fi
+		if [ -d ${build_dir} ]; then
+			echo "[i] cleaning ${build_dir}..."
+			rm -rf ${build_dir}
+		fi
+		echo "[i] done cleaning."
+		cd $wdir
+	fi
 
-version=$1
-[ -z $version ] && version=v5-34-34 && echo "[w] using default version"
-echo "[i] version is $version"
-# from https://root.cern.ch/get-root-sources
-# https://root.cern.ch/building-root
+	if [ $do_download ]; then
+		echo "[i] git commands... with ${remote_dir} and directory ${unpack_dir}"
+		cd ${module_dir}
+		[ ! -d ${unpack_dir} ] && git clone ${remote_dir} ${unpack_dir}
+		cd ${unpack_dir}
+		if [ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) == ${version} ]; then
+			echo "[i] already on ${version} branch..."
+		else
+			git checkout -b ${version} ${version}
+			echo "[i] checking out version ${version}"
+		fi
+		cd $wdir
+	fi
 
-git_dir=$cdir/root
-[ ! -d $git_dir ] && git clone http://root.cern.ch/git/root.git
-cd $git_dir
-[ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) != ${version} ] && echo "[i] checking out $version" && git checkout -b $version $version
+	mkdir -pv ${build_dir}
+}
 
-config_opts=
-if [ $(uname -n | cut -c 1-4) = "pdsf" ];
-then 
-    config_opts="-Dxrootd=OFF -Dldap=OFF"
-fi
+prep_build
 
-install_dir=${cdir}/${version}
-bdir="${cdir}/build_${version}"
-mkdir -p $bdir && cd $bdir && cmake $git_dir $config_opts
-cd $bdir && cmake --build .
-cd $bdir && cmake -DCMAKE_INSTALL_PREFIX=$install_dir -P cmake_install.cmake
+function build()
+{
+	which gfortran
+	which gcc
+	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
+	compiler_opts="-DCMAKE_C_COMPILER=$(which gcc) -DCMAKE_CXX_COMPILER=$(which g++) -DCMAKE_Fortran_COMPILER=$(which gfortran)"
+	cd ${build_dir}
+	echo "[i] extra options: ${config_opts} ${compiler_opts}"
+	cmake ${unpack_dir} ${config_opts} ${compiler_opts}
+	cmake --build . -- -j $(n_cores)
+	cmake -DCMAKE_INSTALL_PREFIX=${install_dir} -P cmake_install.cmake
+}
 
-$cdir/../bin/make_module_from_current.sh -d $install_dir -n root -v $version -o $cdir/../modules/
+exec_build
+make_module
 
-cd $cdir
+cd $savedir

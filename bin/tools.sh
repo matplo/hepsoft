@@ -110,8 +110,9 @@ function strip_root_dir()
 
 function module_name()
 {
-	local _this_dir=$1
-	echo $(dirname $(echo $_this_dir | sed "s|${up_dir}||" | sed "s|/||" | sed "s|.||"))
+	local _this_dir=$(abspath $1)
+	#echo $(dirname $(echo $_this_dir | sed "s|${up_dir}||" | sed "s|/||" | sed "s|.||"))
+	echo $(basename $(dirname $(echo ${_this_dir} | sed "s|${up_dir}||")))
 }
 
 function n_cores()
@@ -137,7 +138,7 @@ function executable_from_path()
 function config_value()
 {
 	local _what=$1
-	local _retval="querying an unset config setting: ${_what}"
+	local _retval="[error]querying-an-unset-config-setting:${_what}"
 	local _config=$up_dir/config/versions.cfg
 	if [ ! -z ${_what} ]; then
 		local _nlines=$(cat ${_config} | wc -l)
@@ -159,6 +160,7 @@ function process_variables()
 {
 	[ -z $1 ] && "[e] process_variables called w/o argument - should be: BASH_SOURCE"
 	wdir=${hepsoft_dir}
+	echo "[i] processing variables... working with $1"
 	module_name=$(module_name $1)
 	pdsf_modules=$(config_value ${module_name}_pdsf_modules)
 	module_deps=$(config_value ${module_name}_deps)
@@ -205,7 +207,8 @@ function prep_build()
 	fi
 
 	if [ -e ${local_file} ]; then
-		_local_dir=$(tar tfz ${local_file} --exclude '*/*' | head -n 1)
+		local _local_dir=$(tar tfz ${local_file} --exclude '*/*' | head -n 1)
+		[ -z ${_local_dir} ] && _local_dir=$(tar tfz /project/projectdirs/alice/ploskon/software/hepsoft/cmake/cmake-3.9.1.tar.gz | head -n 1 | cut -f 1 -d "/")
 		[ ${_local_dir} == "." ] && echo "[e] bad _local_dir ${_local_dir}. stop." && exit 1
 		[ -z ${_local_dir} ] && echo "[e] bad _local_dir EMPTY. stop." && exit 1
 		unpack_dir=${module_dir}/${_local_dir}

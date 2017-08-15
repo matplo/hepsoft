@@ -1,20 +1,28 @@
 #!/bin/bash
 
-cdir=$PWD
-module load gcc python qt
-#qt/5.5.0
+savedir=$PWD
+hepsoft_dir=/project/projectdirs/alice/ploskon/software/hepsoft
+source ${hepsoft_dir}/bin/tools.sh
+process_variables $BASH_SOURCE $@
+cd $wdir
+echo_common_settings
+process_modules
+prep_build
 
-version=3.9.0
-local_file=cmake-${version}.tar.gz
-[ ! -e $local_file ] && wget https://cmake.org/files/v3.9/${local_file} --no-check-certificate
+function build()
+{
+	enable_qt=$(is_opt_set --qt-gui)
+	echo "[i] enable qt      : " $enable_qt
+	if [ $enable_qt ]; then
+		./configure --prefix=${install_dir} --parallel=4 --qt-gui
+	else
+		./configure --prefix=${install_dir} --parallel=4
+	fi
+	make -j $(n_cores)
+	make install
+}
 
-local_dir=cmake-${version}
-rm -rf $local_dir
-tar zxvf $local_file
-cd $local_dir
-./configure --prefix=$cdir/$version --parallel=4 --qt-gui
-make -j
-make install
-cd $cdir
+exec_build
+make_module
 
-$cdir/../bin/make_module_from_current.sh -d $cdir/3.9.0 -n cmake -v 3.9.0 -o $cdir/../modules/
+cd $savedir
