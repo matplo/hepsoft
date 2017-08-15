@@ -208,7 +208,7 @@ function prep_build()
 
 	if [ -e ${local_file} ]; then
 		local _local_dir=$(tar tfz ${local_file} --exclude '*/*' | head -n 1)
-		[ -z ${_local_dir} ] && _local_dir=$(tar tfz /project/projectdirs/alice/ploskon/software/hepsoft/cmake/cmake-3.9.1.tar.gz | head -n 1 | cut -f 1 -d "/")
+		[ -z ${_local_dir} ] && _local_dir=$(tar tfz ${local_file} | head -n 1 | cut -f 1 -d "/")
 		[ ${_local_dir} == "." ] && echo "[e] bad _local_dir ${_local_dir}. stop." && exit 1
 		[ -z ${_local_dir} ] && echo "[e] bad _local_dir EMPTY. stop." && exit 1
 		unpack_dir=${module_dir}/${_local_dir}
