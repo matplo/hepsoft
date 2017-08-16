@@ -227,8 +227,10 @@ function exec_clean()
 			rm -rf ${src_dir}
 		fi
 		if [ -f ${local_file} ]; then
-			echo "[i] removing local downloads ${local_file}..."
-			rm -rf ${local_file}
+			if [ ! $do_download ]; then
+				echo "[i] removing local downloads ${local_file}..."
+				rm -rf ${local_file}
+			fi
 		fi
 		if [ $do_clean_all ]; then
 			echo "[i] removing install dir ${install_dir}"
