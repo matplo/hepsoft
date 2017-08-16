@@ -98,8 +98,8 @@ function host_pdsf()
 
 function sedi()
 {
-	[ $(os_darwin) ] && sed -i "" -e "$@"
-	[ $(os_linux)  ] && sed -i'' -e "$@"
+	[ $(os_darwin) ] && sed -i "" -e $@
+	[ $(os_linux)  ] && sed -i'' -e $@
 }
 
 function strip_root_dir()
@@ -175,10 +175,14 @@ function process_variables()
 	do_download=$(is_opt_set --download)
 	version=$(get_opt_with --version)
 	[ -z $version ] && version=$(config_value ${module_name})
-	unpack_dir=${module_dir}/${module_name}-${version}
-	build_dir=${module_dir}/build_${version}
+	srcs_dir=${hepsoft_dir}/srcs
+	src_dir=${srcs_dir}/${module_name}
+	unpack_dir=${src_dir}/${version}
+	builds_dir=${hepsoft_dir}/builds
+	build_dir=${builds_dir}/${module_name}/build_${version}
 	install_dir=${module_dir}/${version}
-	local_file=${module_dir}/${module_name}-${version}.tar.gz
+	downloads_dir=${hepsoft_dir}/downloads
+	local_file=${downloads_dir}/${module_name}/${module_name}-${version}.tar.gz
 	#remote_file=$(config_value ${module_name}_http_dir)/${local_file}
 	remote_dir=$(config_value ${module_name}_remote_dir)
 	remote_file=$(config_value ${module_name}_remote_file)
@@ -206,26 +210,8 @@ function process_modules()
 	module list
 }
 
-function prep_build()
+function exec_clean()
 {
-	if [ $do_download ]; then
-		cd ${module_dir}
-		rm ${local_file}
-		wget ${remote_file} --no-check-certificate -O ${local_file}
-		cd $wdir
-	fi
-
-	if [ -e ${local_file} ]; then
-		local _local_dir=$(tar tfz ${local_file} --exclude '*/*' | head -n 1)
-		[ -z ${_local_dir} ] && _local_dir=$(tar tfz ${local_file} | head -n 1 | cut -f 1 -d "/")
-		[ ${_local_dir} == "." ] && echo "[e] bad _local_dir ${_local_dir}. stop." && exit 1
-		[ -z ${_local_dir} ] && echo "[e] bad _local_dir EMPTY. stop." && exit 1
-		unpack_dir=${module_dir}/${_local_dir}
-		echo "[i] changed unpack_dir to ${unpack_dir}"
-	else
-		echo "[w] local file does not exist? ${local_file}"
-	fi
-
 	if [ $do_clean ]; then
 		cd ${module_dir}
 		if [ -d ${unpack_dir} ]; then
@@ -236,11 +222,51 @@ function prep_build()
 			echo "[i] cleaning ${build_dir}..."
 			rm -rf ${build_dir}
 		fi
+		if [ -d ${src_dir} ]; then
+			echo "[i] cleaning ${src_dir}..."
+			rm -rf ${src_dir}
+		fi
+		if [ -f ${local_file} ]; then
+			echo "[i] removing local downloads ${local_file}..."
+			rm -rf ${local_file}
+		fi
+		if [ $do_clean_all ]; then
+			echo "[i] removing install dir ${install_dir}"
+			rm -rf ${install_dir}
+		fi
 		echo "[i] done cleaning."
 		cd $wdir
 	fi
+}
+function prep_build()
+{
+	if [ $do_download ]; then
+		cd ${module_dir}
+		rm ${local_file}
+		mkdir -p $(dirname ${local_file})
+		wget ${remote_file} --no-check-certificate -O ${local_file}
+		cd $wdir
+	fi
 
-	mkdir -pv ${build_dir}
+	if [ -e ${local_file} ]; then
+		cd ${module_dir}
+		local _local_dir=$(tar tfz ${local_file} --exclude '*/*' | head -n 1)
+		[ -z ${_local_dir} ] && _local_dir=$(tar tfz ${local_file} | head -n 1 | cut -f 1 -d "/")
+		[ ${_local_dir} == "." ] && echo "[e] bad _local_dir ${_local_dir}. stop." && exit 1
+		[ -z ${_local_dir} ] && echo "[e] bad _local_dir EMPTY. stop." && exit 1
+		unpack_dir=${src_dir}/${_local_dir}
+		echo "[i] changed unpack_dir to ${unpack_dir}"
+		cd $wdir
+	else
+		echo "[w] local file does not exist? ${local_file}"
+	fi
+
+	exec_clean
+
+	if [ $do_build ]; then
+		mkdir -pv ${build_dir}
+		cd $wdir
+	fi
 }
 
 function exec_build()
@@ -251,7 +277,9 @@ function exec_build()
 		[ ! -e ${local_file} ] && echo "[e] file ${local_file} does not exist" && exit 1
 		if [ ! -d ${unpack_dir} ]; then
 			echo "[i] unpacking..."
-			tar zxvf $local_file 2>&1 > /dev/null
+			mkdir -p ${src_dir}
+			cd ${src_dir}
+			tar zxvf ${local_file} 2>&1 > /dev/null
 		fi
 		[ ! -d ${unpack_dir} ] && echo "[e] dir ${unpack_dir} does not exist" && exit 1
 		cd ${unpack_dir}
@@ -286,17 +314,22 @@ function echo_common_settings()
 	echo "[i] module_dir     : " $module_dir
 	echo "[i] module_deps    : " $module_deps
 	echo "[i] pdsf_modules   : " $pdsf_modules
+	echo "[i] has_pythonlib  : " $has_pythonlib
+	echo
 	echo "[i] remote_file    : " $remote_file
+	echo "[i] downloads_dir  : " $downloads_dir
 	echo "[i] local_file     : " $local_file
+	echo "[i] srcs_dir       : " $srcs_dir
 	echo "[i] unpack_dir     : " $unpack_dir
 	echo "[i] build_dir      : " $build_dir
 	echo "[i] install_dir    : " $install_dir
-	echo "[i] has_pythonlib  : " $has_pythonlib
+	echo
 	echo "[i] do_download    : " $do_download
 	echo "[i] do_clean       : " $do_clean
 	echo "[i] do_rebuild     : " $do_rebuild
 	echo "[i] do_build       : " $do_build
 	echo "[i] do_make_module : " $do_make_module
+	echo
 	echo "[i] module deps    : " $module_deps
 	echo "[i] w/ make use -j : " $(n_cores)
 }

@@ -14,19 +14,7 @@ process_modules
 
 function prep_build()
 {
-	if [ $do_clean ]; then
-		cd ${module_dir}
-		if [ -d ${unpack_dir} ]; then
-			echo "[i] cleaning ${unpack_dir}..."
-			rm -rf ${unpack_dir}
-		fi
-		if [ -d ${build_dir} ]; then
-			echo "[i] cleaning ${build_dir}..."
-			rm -rf ${build_dir}
-		fi
-		echo "[i] done cleaning."
-		cd $wdir
-	fi
+	exec_clean
 
 	if [ $do_download ]; then
 		echo "[i] git commands... with ${remote_dir} and directory ${unpack_dir}"
@@ -42,7 +30,10 @@ function prep_build()
 		cd $wdir
 	fi
 
-	mkdir -pv ${build_dir}
+	if [ $do_build ]; then
+		mkdir -pv ${build_dir}
+		cd $wdir
+	fi
 }
 
 prep_build

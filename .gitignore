@@ -1,3 +1,7 @@
 /modules
 /scripts
 /logs
+/downloads
+/builds
+/srcs
+install.sh

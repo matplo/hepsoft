@@ -88,6 +88,20 @@ do
 done
 chmod +x ${mmscript}
 echo "    -> ${mmscript} created."
+
+mmscript=${HEPSOFTDIR}/bin/cleanup.sh
+rm -f $mmscript
+#for mod in $config_ordered_modules
+#do
+#    [ ! -f ${HEPSOFTDIR}/${mod}/_install.sh ] && continue
+#    echo "${HEPSOFTDIR}/${mod}/install.sh --clean" >> ${mmscript}
+#done
+echo "rm -rfv ${HEPSOFTDIR}/downloads" >> ${mmscript}
+echo "rm -rfv ${HEPSOFTDIR}/srcs" >> ${mmscript}
+echo "rm -rfv ${HEPSOFTDIR}/builds" >> ${mmscript}
+chmod +x ${mmscript}
+echo "    -> ${mmscript} created."
+
 echo "[i] done."
 
 echo "[i] HEPSOFTDIR: ${HEPSOFTDIR}"
