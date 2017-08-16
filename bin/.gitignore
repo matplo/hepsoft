@@ -4,3 +4,4 @@
 /clean_*.sh
 /make_module_from_current.sh
 /make_modules.sh
+/cleanup_all.sh
