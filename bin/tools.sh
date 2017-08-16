@@ -98,8 +98,8 @@ function host_pdsf()
 
 function sedi()
 {
-	[ $(os_darwin) ] && sed -i "" -e $@
-	[ $(os_linux)  ] && sed -i'' -e $@
+	[ $(os_darwin) ] && sed -i "" -e "$@"
+	[ $(os_linux)  ] && sed -i'' -e "$@"
 }
 
 function strip_root_dir()
