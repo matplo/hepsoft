@@ -35,13 +35,11 @@ function get_PDFsets()
 
 function build()
 {
-	get_PDFsets
     ./configure --prefix=${install_dir}
 	[ ${do_clean} ] && make clean
 	make -j $(n_cores)
 	make install
-	make -j $(n_cores)
-	make install
+    get_PDFsets
 }
 
 exec_build

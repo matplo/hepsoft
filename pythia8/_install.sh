@@ -17,19 +17,19 @@ function build()
 	    rsyslib=`root-config --libdir`
 	    root_opt="--with-root=$rsys --with-root-lib=$rsyslib --with-root-include=$rsysinc"
 	fi
-	if [ ${hepmcDIR} ]; then
+	if [ ! -z ${hepmcDIR} ]; then
 		hepmc_opt=--with-hepmc2=$hepmcDIR
 	fi
-	if [ ${lhapdfDIR} ]; then
+	if [ ! -z ${lhapdfDIR} ]; then
 		lhapdf_opt=--with-lhapdf5=$lhapdfDIR
 	fi
-	if [ ${fastjetDIR} ]; then
+	if [ ! -z ${fastjetDIR} ]; then
 		fastjet_opt=--with-fastjet3=$fastjetDIR
 	fi
 
     ./configure --prefix=${install_dir} ${root_opt} ${hepmc_opt} ${lhapdf_opt} --with-python
 
-	[ ${do_clean} ] && make clean
+	[ ! -z ${do_clean} ] && make clean
 	make -j $(n_cores)
 	make install
 

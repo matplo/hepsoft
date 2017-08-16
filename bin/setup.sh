@@ -83,6 +83,7 @@ mmscript=${HEPSOFTDIR}/bin/make_modules.sh
 rm -f $mmscript
 for mod in $config_ordered_modules
 do
+    [ ! -f ${HEPSOFTDIR}/${mod}/_install.sh ] && continue
     echo "${HEPSOFTDIR}/${mod}/install.sh --module" >> ${mmscript}
 done
 chmod +x ${mmscript}

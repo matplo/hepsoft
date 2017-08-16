@@ -138,7 +138,8 @@ function executable_from_path()
 function config_value()
 {
 	local _what=$1
-	local _retval="" #"[error]querying-an-unset-config-setting:${_what}"
+	local _retval=""
+	#"[error]querying-an-unset-config-setting:${_what}"
 	local _config=$up_dir/config/versions.cfg
 	if [ ! -z ${_what} ]; then
 		local _nlines=$(cat ${_config} | wc -l)
@@ -189,13 +190,15 @@ function process_modules()
 {
 	module use ${hepsoft_dir}/modules
 	if [ $(host_pdsf) ]; then
-		echo "[i] pdsf_modules   : " $pdsf_modules
-		module load ${pdsf_modules}
-		[ $? != 0 ] && exit 1
+		if [ ! -z "${pdsf_modules}" ]; then
+			echo "[i] pdsf_modules   : " $pdsf_modules
+			module load ${pdsf_modules}
+			(($?!=0)) && exit 1
+		fi
 	else
-		if [ ! -z ${module_deps} ]; then
+		if [ ! -z "${module_deps}" ]; then
 			module load ${module_deps}
-			[ $? != 0 ] && exit 1
+			(($?!=0)) && exit 1
 		else
 			echo "[i] no extra modules loaded"
 		fi
