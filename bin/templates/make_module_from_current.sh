@@ -12,8 +12,9 @@ targetdir=
 modfile_base=
 outputdir=
 version=default
+has_pythonlib=
 
-while getopts ":n:d:o:v:" opt; do
+while getopts ":n:d:o:v:p:" opt; do
   case $opt in
     n)
       modfile_base=$OPTARG
@@ -26,6 +27,9 @@ while getopts ":n:d:o:v:" opt; do
       ;;
     v)
       version=$OPTARG
+      ;;
+    p)
+      has_pythonlib=$OPTARG
       ;;
     \?)
       echo "[e] Invalid option: -$OPTARG" >&2
@@ -49,7 +53,10 @@ mkdir -p $outputdir/${modfile_base}
 modfile=$outputdir/${modfile_base}/$version
 echo "[i] modfile: "$modfile
 
-cat >$modfile <<EOL
+rm -rf $modfile
+touch $modfile
+
+cat>>$modfile<<EOL
 #%Module
 proc ModulesHelp { } {
         global version
@@ -77,6 +84,19 @@ if [ -d $targetdir/lib64 ]; then
 prepend-path LD_LIBRARY_PATH <dir>/lib64
 prepend-path DYLD_LIBRARY_PATH <dir>/lib64
 EOL
+fi
+
+if [ ! -z ${has_pythonlib} ]; then
+if [ -d $targetdir/lib64 ]; then
+  cat >>$modfile<<EOL
+prepend-path PYTHONPATH <dir>/lib64/${has_pythonlib}
+EOL
+fi
+if [ -d $targetdir/lib ]; then
+  cat >>$modfile<<EOL
+prepend-path PYTHONPATH <dir>/lib/${has_pythonlib}
+EOL
+fi
 fi
 
 [ -d $targetdir/bin ] && echo "prepend-path PATH <dir>/bin" >> $modfile

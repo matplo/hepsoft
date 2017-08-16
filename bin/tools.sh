@@ -98,8 +98,8 @@ function host_pdsf()
 
 function sedi()
 {
-	[ $(os_darwin) ] && sed -i " " $@
-	[ $(os_linux)  ] && sed -i'' $@
+	[ $(os_darwin) ] && sed -i "" -e $@
+	[ $(os_linux)  ] && sed -i'' -e $@
 }
 
 function strip_root_dir()
@@ -138,7 +138,7 @@ function executable_from_path()
 function config_value()
 {
 	local _what=$1
-	local _retval="[error]querying-an-unset-config-setting:${_what}"
+	local _retval="" #"[error]querying-an-unset-config-setting:${_what}"
 	local _config=$up_dir/config/versions.cfg
 	if [ ! -z ${_what} ]; then
 		local _nlines=$(cat ${_config} | wc -l)
@@ -149,7 +149,7 @@ function config_value()
 			#_pack=$(echo ${_line} | grep ${_what} | cut -f 1 -d "=" | sed 's| ||g')
 			#_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's| ||g')
 			_pack=$(echo ${_line} | grep ${_what} | cut -f 1 -d "=" | sed 's/^ *//g' | sed 's/ *$//g')
-			_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's/^ *//g' | sed 's/ *$//g')
+			_val=$(echo ${_line} | grep ${_what} | grep -v ${_what}_deps | cut -f 2 -d "=" | sed 's/^ *//g' | sed 's/ *$//g' | tr -d '\n')
 			[ "${_pack}" == "${_what}" ] && _retval=${_val}
 		done
 	fi
@@ -165,6 +165,7 @@ function process_variables()
 	pdsf_modules=$(config_value ${module_name}_pdsf_modules)
 	module_deps=$(config_value ${module_name}_deps)
 	module_dir=${hepsoft_dir}/${module_name}
+	has_pythonlib=$(config_value ${module_name}_pythonlib)
 	do_clean=$(is_opt_set --clean)
 	do_rebuild=$(is_opt_set --rebuild)
 	do_build=$(is_opt_set --build)
@@ -267,7 +268,11 @@ function make_module()
 {
 	if [ $do_make_module ]; then
 		echo "[i] preparing a module file for ${module_name}/${version} ..."
-		${hepsoft_dir}/bin/make_module_from_current.sh -d ${install_dir} -n ${module_name} -v $version -o ${hepsoft_dir}/modules
+		if [ ! -z ${has_pythonlib} ]; then
+			${hepsoft_dir}/bin/make_module_from_current.sh -p ${has_pythonlib} -d ${install_dir} -n ${module_name} -v ${version} -o ${hepsoft_dir}/modules ${module_has_pythonlib}
+		else
+			${hepsoft_dir}/bin/make_module_from_current.sh -d ${install_dir} -n ${module_name} -v ${version} -o ${hepsoft_dir}/modules ${module_has_pythonlib}
+		fi
 	fi
 }
 
@@ -283,7 +288,7 @@ function echo_common_settings()
 	echo "[i] unpack_dir     : " $unpack_dir
 	echo "[i] build_dir      : " $build_dir
 	echo "[i] install_dir    : " $install_dir
-
+	echo "[i] has_pythonlib  : " $has_pythonlib
 	echo "[i] do_download    : " $do_download
 	echo "[i] do_clean       : " $do_clean
 	echo "[i] do_rebuild     : " $do_rebuild
