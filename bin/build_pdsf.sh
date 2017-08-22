@@ -23,7 +23,7 @@ source ./bt.sh
 install_prefix=$HOME/software/hepsoft
 if [ $(host_pdsf) ]; then
 	install_prefix=/project/projectdirs/alice/ploskon/software/hepsoft
-	module load gcc python git
+	module load gcc python git qt
 fi
 
 cd $savedir
