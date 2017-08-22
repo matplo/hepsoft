@@ -19,10 +19,14 @@ function download()
 	if [ $(bool ${BT_download}) ]; then
 		separator "clone ${BT_name}/${BT_version}"
 		setup_src_dir
-		echo "[i] git commands... with ${BT_remote_dir} and directory ${BT_sources_dir}"
-		[ ! -d ${BT_src_dir} ] && git clone ${BT_remote_dir} ${BT_src_dir}
+		echo "[i] git commands... with ${BT_remote_dir} and sources directory ${BT_sources_dir}"
+		echo "    and src directory ${BT_sources_dir}"
+		if [ -d ${BT_src_dir} ]; then
+			warning "sources dir exists ${BT_src_dir}"
+		fi
+		git clone ${BT_remote_dir} ${BT_src_dir}
 		cd ${BT_src_dir}
-		if [ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) == ${BT_version} ]; then
+		if [ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) == "${BT_version}" ]; then
 			echo "[i] already on ${BT_version} branch..."
 		else
 			git checkout -b ${BT_version} ${BT_version}
