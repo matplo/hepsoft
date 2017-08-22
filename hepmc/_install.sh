@@ -7,7 +7,7 @@ BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=hepmc
 BT_version=2.06.09
-BT_remote_file=http://lcgapp.cern.ch/project/simu/HepMC/download/HepMC-2.06.09.tar.gz
+BT_remote_file=http://lcgapp.cern.ch/project/simu/HepMC/download/HepMC-${BT_version}.tar.gz
 
 function build()
 {

@@ -39,7 +39,7 @@ function build()
 	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
 	compiler_opts="-DCMAKE_C_COMPILER=$(which gcc) -DCMAKE_CXX_COMPILER=$(which g++) -DCMAKE_Fortran_COMPILER=$(which gfortran)"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
-	cmake -DCMAKE_BUILD_TYPE=${BT_build_type} ${config_opts} ${compiler_opts} ${BT_src_dir} 
+	cmake -DCMAKE_BUILD_TYPE=${BT_build_type} ${config_opts} ${compiler_opts} ${BT_src_dir}
 	cmake --build . -- -j $(n_cores)
 	cmake -DCMAKE_INSTALL_PREFIX=${BT_install_dir} -P cmake_install.cmake
 }

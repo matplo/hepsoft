@@ -7,7 +7,7 @@ BT_modules="cmake boost"
 
 BT_name=cgal
 BT_version=4.10
-BT_remote_file=https://github.com/CGAL/cgal/archive/releases/CGAL-4.10.tar.gz
+BT_remote_file=https://github.com/CGAL/cgal/archive/releases/CGAL-${BT_version}.tar.gz
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 function build()
