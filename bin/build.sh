@@ -45,7 +45,7 @@ do
 done
 
 _commands=""
-for _cmnd in clean build cleanup module download
+for _cmnd in clean download build module cleanup
 do
 	if [ $(is_opt_set "--${_cmnd}") == "yes" ]; then
 		if [ "x${_commands}" == "x" ]; then
