@@ -1,28 +1,22 @@
 #!/bin/bash
 
-savedir=$PWD
-hepsoft_dir=<hepsoft>
-source ${hepsoft_dir}/bin/tools.sh
-process_variables $BASH_SOURCE $@
-cd $wdir
-echo_common_settings
-process_modules
-prep_build
+BT_install_prefix=<hepsoft>
+BT_modules=
+
+BT_name=cmake
+BT_version=3.9.1
+BT_remote_file=https://cmake.org/files/v3.9/cmake-${BT_version}.tar.gz
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 function build()
 {
 	enable_qt=$(is_opt_set --qt-gui)
-	echo "[i] enable qt      : " $enable_qt
-	if [ $enable_qt ]; then
-		./configure --prefix=${install_dir} --parallel=4 --qt-gui
+	echo "[i] enable qt      : " $BT_enable_qt
+	if [ $BT_enable_qt ]; then
+		${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4 --qt-gui
 	else
-		./configure --prefix=${install_dir} --parallel=4
+		${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4
 	fi
 	make -j $(n_cores)
 	make install
 }
-
-exec_build
-make_module
-
-cd $savedir

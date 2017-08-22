@@ -1,28 +1,23 @@
 #!/bin/bash
 
-savedir=$PWD
-hepsoft_dir=<hepsoft>
-source ${hepsoft_dir}/bin/tools.sh
-process_variables $BASH_SOURCE $@
-cd $wdir
-echo_common_settings
-process_modules
-prep_build
+BT_install_prefix=<hepsoft>
+BT_module_paths=${BT_install_prefix}/modules
+BT_modules=cgal
+
+BT_name=fastjet
+BT_version=3.3.0
+BT_remote_file=http://fastjet.fr/repo/fastjet-${BT_version}.tar.gz
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 function build()
 {
-	if [ -z ${cgalDIR} ]; then
+	cd ${BT_src_dir}
+	if [ -z ${CGALDIR} ]; then
 	    ./configure --prefix=${install_dir}
 	else
-		echo "[i] building using cgal at ${cgalDIR}"
-	    ./configure --prefix=${install_dir} --enable-cgal --with-cgaldir=${cgalDIR} LDFLAGS=-Wl,-rpath,${boostDIR}/lib CXXFLAGS=-I${boostDIR}/include CPPFLAGS=-I${boostDIR}/include
+		echo "[i] building using cgal at ${CGALDIR}"
+	    ./configure --prefix=${BT_install_dir} --enable-cgal --with-cgaldir=${CGALDIR} LDFLAGS=-Wl,-rpath,${BOOSTDIR}/lib CXXFLAGS=-I${BOOSTDIR}/include CPPFLAGS=-I${BOOSTDIR}/include
 	fi
-	[ ${do_clean} ] && make clean
 	make -j $(n_cores)
 	make install
 }
-
-exec_build
-make_module
-
-cd $savedir

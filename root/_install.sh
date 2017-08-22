@@ -1,42 +1,36 @@
 #!/bin/bash
 
 savedir=$PWD
-hepsoft_dir=<hepsoft>
-source ${hepsoft_dir}/bin/tools.sh
-process_variables $BASH_SOURCE $@
-cd $wdir
 
-unpack_dir=${module_dir}/root.git
-local_file=${unpack_dir}
+BT_install_prefix=<hepsoft>
+BT_module_paths=${BT_install_prefix}/modules
+BT_modules=cmake
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
+BT_name=root
+BT_version=v5-34-36
+BT_remote_dir=http://root.cern.ch/git/root.git
+BT_remote_file="installing_from_git"
+BT_pythonlib=/
+BT_build_type=Release
+BT_local_file=${BT_src_dir}
 
-echo_common_settings
-process_modules
-
-function prep_build()
+function download()
 {
-	exec_clean
-
-	if [ $do_download ]; then
-		echo "[i] git commands... with ${remote_dir} and directory ${unpack_dir}"
-		cd ${module_dir}
-		[ ! -d ${unpack_dir} ] && git clone ${remote_dir} ${unpack_dir}
-		cd ${unpack_dir}
-		if [ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) == ${version} ]; then
-			echo "[i] already on ${version} branch..."
+	if [ $(bool ${BT_download}) ]; then
+		separator "clone ${BT_name}/${BT_version}"
+		setup_src_dir
+		echo "[i] git commands... with ${BT_remote_dir} and directory ${BT_sources_dir}"
+		[ ! -d ${BT_src_dir} ] && git clone ${BT_remote_dir} ${BT_src_dir}
+		cd ${BT_src_dir}
+		if [ $(git status -s -b | cut -f 2 -d " " | xargs echo -n) == ${BT_version} ]; then
+			echo "[i] already on ${BT_version} branch..."
 		else
-			git checkout -b ${version} ${version}
-			echo "[i] checking out version ${version}"
+			git checkout -b ${BT_version} ${BT_version}
+			echo "[i] checking out version ${BT_version}"
 		fi
-		cd $wdir
-	fi
-
-	if [ $do_build ]; then
-		mkdir -pv ${build_dir}
-		cd $wdir
+		cd ${BT_working_dir}
 	fi
 }
-
-prep_build
 
 function build()
 {
@@ -44,14 +38,8 @@ function build()
 	which gcc
 	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
 	compiler_opts="-DCMAKE_C_COMPILER=$(which gcc) -DCMAKE_CXX_COMPILER=$(which g++) -DCMAKE_Fortran_COMPILER=$(which gfortran)"
-	cd ${build_dir}
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
-	cmake ${unpack_dir} ${config_opts} ${compiler_opts}
+	cmake -DCMAKE_BUILD_TYPE=${BT_build_type} ${config_opts} ${compiler_opts} ${BT_src_dir} 
 	cmake --build . -- -j $(n_cores)
-	cmake -DCMAKE_INSTALL_PREFIX=${install_dir} -P cmake_install.cmake
+	cmake -DCMAKE_INSTALL_PREFIX=${BT_install_dir} -P cmake_install.cmake
 }
-
-exec_build
-make_module
-
-cd $savedir
