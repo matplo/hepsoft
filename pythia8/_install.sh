@@ -1,16 +1,17 @@
 #!/bin/bash
 
-savedir=$PWD
-hepsoft_dir=<hepsoft>
-source ${hepsoft_dir}/bin/tools.sh
-process_variables $BASH_SOURCE $@
-cd $wdir
-echo_common_settings
-process_modules
-prep_build
+BT_install_prefix=<hepsoft>
+BT_module_paths=${BT_install_prefix}/modules
+BT_modules="cmake root hepmc lhapdf fastjet"
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
+
+BT_name=pythia8
+BT_version=8226
+BT_remote_file=http://home.thep.lu.se/~torbjorn/pythia8/pythia${BT_version}.tgz
 
 function build()
 {
+	cd ${BT_src_dir}
 	if [ -e $(which root-config) ]; then
 	    rsys=`root-config --prefix`
 	    rsysinc=`root-config --incdir`
@@ -27,17 +28,11 @@ function build()
 		fastjet_opt=--with-fastjet3=$fastjetDIR
 	fi
 
-    ./configure --prefix=${install_dir} ${root_opt} ${hepmc_opt} ${lhapdf_opt} --with-python
+    ./configure --prefix=${BT_install_dir} ${root_opt} ${hepmc_opt} ${lhapdf_opt} --with-python
 
-	[ ! -z ${do_clean} ] && make clean
 	make -j $(n_cores)
 	make install
 
-	sedi "s|-std=c++98||g" ${install_dir}/share/Pythia8/examples/Makefile.inc
-	echo "[w] pathed ${install_dir}/share/Pythia8/examples/Makefile.inc"
+	sedi "s|-std=c++98||g" ${BT_install_dir}/share/Pythia8/examples/Makefile.inc
+	echo "[w] pathed ${BT_install_dir}/share/Pythia8/examples/Makefile.inc"
 }
-
-exec_build
-make_module
-
-cd $savedir
