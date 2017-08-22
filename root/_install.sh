@@ -4,7 +4,7 @@ savedir=$PWD
 
 BT_install_prefix=<hepsoft>
 BT_module_paths=${BT_install_prefix}/modules
-BT_modules=cmake
+BT_modules="cmake"
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 BT_name=root
 BT_version=v5-34-36

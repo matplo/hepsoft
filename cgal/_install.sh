@@ -3,7 +3,7 @@
 
 BT_install_prefix=<hepsoft>
 BT_module_paths=${BT_install_prefix}/modules
-BT_modules=boost
+BT_modules="cmake boost"
 
 BT_name=cgal
 BT_version=4.10

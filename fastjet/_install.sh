@@ -2,7 +2,7 @@
 
 BT_install_prefix=<hepsoft>
 BT_module_paths=${BT_install_prefix}/modules
-BT_modules=cgal
+BT_modules="cmake boost cgal"
 
 BT_name=fastjet
 BT_version=3.3.0

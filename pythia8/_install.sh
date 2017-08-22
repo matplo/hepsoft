@@ -2,7 +2,7 @@
 
 BT_install_prefix=<hepsoft>
 BT_module_paths=${BT_install_prefix}/modules
-BT_modules="cmake root hepmc lhapdf fastjet"
+BT_modules="cmake root hepmc lhapdf boost cgal fastjet"
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=pythia8

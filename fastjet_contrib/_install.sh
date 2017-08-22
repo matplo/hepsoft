@@ -1,29 +1,30 @@
 #!/bin/bash
 
-savedir=$PWD
-hepsoft_dir=<hepsoft>
-source ${hepsoft_dir}/bin/tools.sh
-process_variables $BASH_SOURCE $@
-cd $wdir
-echo_common_settings
-process_modules
-prep_build
+BT_install_prefix=<hepsoft>
+BT_module_paths=${BT_install_prefix}/modules
+BT_modules="cmake boost cgal fastjet"
+
+BT_name=fastjet_contrib
+BT_version=1.027
+BT_remote_file=http://fastjet.hepforge.org/contrib/downloads/fjcontrib-${BT_version}.tar.gz
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 function build()
 {
 	fjconf=$(executable_from_path fastjet-config)
 	if [ $fjconf ]; then
-		install_dir=$(fastjet-config --prefix)
-		[ ${do_clean} ] && make clean
-		./configure --prefix=$install_dir CXXFLAGS="-shared -fPIC"
+		export BT_install_dir=$(fastjet-config --prefix)
+		echo_padded_BT_var install_dir
+		cd ${BT_src_dir}
+		./configure --prefix=${BT_install_dir} CXXFLAGS="-shared -fPIC"
 		make -j $(n_cores)
 		make install
 	else
-		echo "[w] fastjet-config not found. stop." && exit 1
+		echo "[w] fastjet-config not found. stop." && do_exit ${BT_error_code}
 	fi
 }
 
-exec_build
-# make_module - no module for this one - installed where the fastjet sits
-
-cd $savedir
+function make_module()
+{
+	separator "no module for ${BT_name}"
+}
