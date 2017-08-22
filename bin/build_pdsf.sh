@@ -16,7 +16,7 @@ savedir=$PWD
 #rm -rf build_hepsoft
 mkdir -p ./build_hepsoft
 cd ./build_hepsoft
-[ ! -f ./bt.sh ] && wget https://raw.github.com/matplo/buildtools/master/bt.sh && chmod +x ./bt.sh
+[ ! -f ./bt.sh ] && wget --no-check-certificate https://raw.github.com/matplo/buildtools/master/bt.sh && chmod +x ./bt.sh
 # cp -v ~/devel/buildtools/bt.sh .
 source ./bt.sh
 
