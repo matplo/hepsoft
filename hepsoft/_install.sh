@@ -1,13 +1,23 @@
 #!/bin/bash
 
-savedir=$PWD
-hepsoft_dir=<hepsoft>
-source ${hepsoft_dir}/bin/tools.sh
-process_variables $BASH_SOURCE $@
-cd $wdir
-echo_common_settings
-process_modules
-#note: there is nothing to build - this is just to make a module file
-make_module
+BT_install_prefix=<hepsoft>
+BT_module_paths=${BT_install_prefix}/modules
+BT_modules="cmake root hepmc lhapdf boost cgal fastjet pythia8"
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
-cd $savedir
+BT_name=hepsoft
+BT_version=default
+BT_install_dir=${BT_install_prefix}
+BT_src_dir="$PWD"
+#cumulative load
+BT_do_preload_modules="yes"
+
+function download()
+{
+	separator "nothing to download"
+}
+
+function build()
+{
+	separator "nothing to build"
+}
