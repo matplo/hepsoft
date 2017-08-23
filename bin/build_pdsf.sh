@@ -42,9 +42,6 @@ echo "[i] $BASH_SOURCE directory: ${_this_dir_resolved}"
 
 _packages=""
 [ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8"
-if [ $(host_pdsf) ]; then
-	[ $(is_opt_set --all) == "yes" ] && _packages="cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8"
-fi
 for _p in "$@"
 do
 	if [ ${_p:0:2} == "--" ]; then
