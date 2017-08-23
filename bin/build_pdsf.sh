@@ -16,19 +16,24 @@ savedir=$PWD
 #rm -rf build_hepsoft
 mkdir -p ./build_hepsoft
 cd ./build_hepsoft
-[ ! -f ./bt.sh ] && wget --no-check-certificate https://raw.github.com/matplo/buildtools/master/bt.sh && chmod +x ./bt.sh
+# [ ! -f ./bt.sh ] && wget --no-check-certificate https://raw.github.com/matplo/buildtools/master/bt.sh && chmod +x ./bt.sh
+if [[ ! -f ./bt.sh ]]; then
+	git clone git@github.com:matplo/buildtools.git bt
+	ln -s ./bt/bt.sh .
+fi
 # cp -v ~/devel/buildtools/bt.sh .
 source ./bt.sh
 
 install_prefix=$HOME/software/hepsoft
 if [ $(host_pdsf) ]; then
 	install_prefix=/project/projectdirs/alice/ploskon/software/hepsoft
-	module load gcc python git qt cmake boost
+	module load gcc python git qt
 fi
 
 cd $savedir
 _abspath=$(dirname $(abspath ${_this_source}))
-_this_dir_resolved=$(resolve_directory ${_abspath})
+#_this_dir_resolved=$(resolve_directory ${_abspath})
+_this_dir_resolved=${_abspath}
 cd ./build_hepsoft
 
 [ $(is_opt_set --help) == "yes" ] && ./bt.sh --help && exit 0

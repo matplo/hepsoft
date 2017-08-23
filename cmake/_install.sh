@@ -12,10 +12,16 @@ function build()
 {
 	enable_qt=$(is_opt_set --qt-gui)
 	echo "[i] enable qt      : " $BT_enable_qt
-	if [ $BT_enable_qt ]; then
-		${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4 --qt-gui
+	if [ $(host_pdsf) ]; then
+		echo "[i] this is PDSF"
+		cd ${BT_src_dir}
+		./configure --prefix=${BT_install_dir}
 	else
-		${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4
+		if [ "x${BT_enable_qt}" = "x" ]; then
+			${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4 --qt-gui
+		else
+			${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4
+		fi
 	fi
 	make -j $(n_cores)
 	make install

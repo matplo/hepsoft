@@ -38,12 +38,19 @@ function download()
 
 function build()
 {
-	which gfortran
-	which gcc
+	cd ${BT_build_dir}
+	module list
+	which cmake
+	echo $PWD
+	local _gff=$(which gfortran)
+	local _gcc=$(which gcc)
+	local _gpp=$(which g++)
 	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
-	compiler_opts="-DCMAKE_C_COMPILER=$(which gcc) -DCMAKE_CXX_COMPILER=$(which g++) -DCMAKE_Fortran_COMPILER=$(which gfortran)"
+	compiler_opts="-DCMAKE_C_COMPILER=${_gcc} -DCMAKE_CXX_COMPILER=${_gpp} -DCMAKE_Fortran_COMPILER=${_gff}"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
-	cmake -DCMAKE_BUILD_TYPE=${BT_build_type} ${config_opts} ${compiler_opts} ${BT_src_dir}
-	cmake --build . -- -j $(n_cores)
+	echo ${BT_src_dir}
+	echo $(resolve_directory ${BT_src_dir})
+	cmake -DCMAKE_BUILD_TYPE\=${BT_build_type} ${compiler_opts} ${config_opts} ${BT_src_dir}
+	cmake --build . -- -j ${BT_n_cores}
 	cmake -DCMAKE_INSTALL_PREFIX=${BT_install_dir} -P cmake_install.cmake
 }
