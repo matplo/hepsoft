@@ -3,8 +3,8 @@
 BT_install_prefix=<hepsoft>
 BT_module_paths=${BT_install_prefix}/modules
 BT_modules="cmake root hepmc lhapdf boost cgal fastjet pythia8"
+[ $(host_pdsf) ] && BT_modules="gcc/4.8.1 git/2.2.1 python/2.7.6"
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
-
 BT_name=hepsoft
 BT_version=default
 BT_install_dir=${BT_install_prefix}
