@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BT_install_prefix=<hepsoft>
-BT_modules=
+# add_prereq_modules
 
 BT_name=cmake
 BT_version=3.9.1

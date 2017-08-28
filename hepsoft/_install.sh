@@ -1,23 +1,25 @@
 #!/bin/bash
 
 BT_install_prefix=<hepsoft>
-BT_module_paths=${BT_install_prefix}/modules
-BT_modules="cmake root hepmc lhapdf boost cgal fastjet pythia8"
-[ $(host_pdsf) ] && BT_modules="gcc/4.8.1 git/2.2.1 python/2.7.6"
+add_prereq_module_paths "${BT_install_prefix}/modules"
+add_prereq_modules cmake root hepmc lhapdf boost cgal fastjet pythia8
+echo_padded_BT_var modules
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 BT_name=hepsoft
 BT_version=default
 BT_install_dir=${BT_install_prefix}
 BT_src_dir="$PWD"
 #cumulative load
-BT_do_preload_modules="yes"
+BT_do_preload_modules="no"
 
 function download()
 {
-	separator "nothing to download"
+	separator "download"
+	note "nothing to download"
 }
 
 function build()
 {
-	separator "nothing to build"
+	separator "build"
+	note "nothing to build"
 }

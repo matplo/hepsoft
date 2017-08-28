@@ -18,17 +18,16 @@ savedir=$PWD
 mkdir -p ./build_hepsoft
 cd ./build_hepsoft
 # [ ! -f ./bt.sh ] && wget --no-check-certificate https://raw.github.com/matplo/buildtools/master/bt.sh && chmod +x ./bt.sh
-if [[ ! -f ./bt.sh ]]; then
+if [[ ! -f ./bt/bt.sh ]]; then
 	git clone git@github.com:matplo/buildtools.git bt
-	ln -s ./bt/bt.sh .
 fi
 # cp -v ~/devel/buildtools/bt.sh .
-source ./bt.sh
+source ./bt/bt.sh
 
 install_prefix=$HOME/software/hepsoft
 if [ $(host_pdsf) ]; then
 	install_prefix=/project/projectdirs/alice/ploskon/software/hepsoft
-	module load gcc python git qt
+	add_prereq_modules gcc python git qt
 fi
 
 cd $savedir
@@ -42,7 +41,7 @@ cd ./build_hepsoft
 echo "[i] $BASH_SOURCE directory: ${_this_dir_resolved}"
 
 _packages=""
-[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8"
+[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8 hepsoft"
 for _p in "$@"
 do
 	if [ ${_p:0:2} == "--" ]; then
@@ -56,7 +55,7 @@ do
 done
 
 _commands=""
-for _cmnd in clean download build module cleanup
+for _cmnd in clean download build module cleanup debug
 do
 	if [ $(is_opt_set "--${_cmnd}") == "yes" ]; then
 		if [ "x${_commands}" == "x" ]; then
@@ -81,7 +80,7 @@ do
 		sedi "s|<hepsoft>|${install_prefix}|g" ${install_sh}
 		eval _ver=$(get_var_value ${_pack}_version)
 		sedi "s|BT_version=.*|BT_version=${_ver}|g" ${install_sh}
-		./bt.sh BT_script=${install_sh} ${_commands}
+		./bt/bt.sh BT_script=${install_sh} ${_commands}
 		echo "[i] done with ${install_sh_templ}"
 	else
 		echo "[w] skipping ${_pack} - no: ${install_sh_templ}"
