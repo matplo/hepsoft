@@ -41,7 +41,7 @@ cd ./build_hepsoft
 echo "[i] $BASH_SOURCE directory: ${_this_dir_resolved}"
 
 _packages=""
-[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8 hepsoft"
+[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8 hepsoft binutils gcc"
 for _p in "$@"
 do
 	if [ ${_p:0:2} == "--" ]; then
@@ -79,7 +79,9 @@ do
 		cp -v ${install_sh_templ} ${install_sh}
 		sedi "s|<hepsoft>|${install_prefix}|g" ${install_sh}
 		eval _ver=$(get_var_value ${_pack}_version)
-		sedi "s|BT_version=.*|BT_version=${_ver}|g" ${install_sh}
+		if [ "x${_ver}" != "x" ]; then
+			sedi "s|BT_version=.*|BT_version=${_ver}|g" ${install_sh}
+		fi
 		./bt/bt.sh BT_script=${install_sh} ${_commands}
 		echo "[i] done with ${install_sh_templ}"
 	else
