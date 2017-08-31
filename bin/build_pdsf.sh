@@ -27,7 +27,7 @@ source ./bt/bt.sh
 install_prefix=$HOME/software/hepsoft
 if [ $(host_pdsf) ]; then
 	install_prefix=/project/projectdirs/alice/ploskon/software/hepsoft
-	add_prereq_modules gcc python git qt
+	add_prereq_modules gcc/4.8.1 python/2.7.9 git qt
 fi
 
 cd $savedir
@@ -41,7 +41,7 @@ cd ./build_hepsoft
 echo "[i] $BASH_SOURCE directory: ${_this_dir_resolved}"
 
 _packages=""
-[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhadpdf hepmc pythia8 hepsoft binutils gcc"
+[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft" # binutils gcc"
 for _p in "$@"
 do
 	if [ ${_p:0:2} == "--" ]; then

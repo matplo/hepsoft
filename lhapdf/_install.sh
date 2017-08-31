@@ -1,9 +1,9 @@
 #!/bin/bash
 
 BT_install_prefix=<hepsoft>
-BT_module_paths=${BT_install_prefix}/modules
 add_prereq_module_paths "${BT_install_prefix}/modules"
 add_prereq_modules cmake
+BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=lhapdf
 BT_version=5.9.1
