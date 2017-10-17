@@ -10,8 +10,8 @@ hepmc_version=2.06.09
 root_version=v5-34-36
 pythia8_version=8226
 hepsoft_version=default
-
 envmodules_version=3.2.10
+jewel_version=2.2.0
 
 install_prefix=$HOME/software/hepsoft
 _this_source=$BASH_SOURCE
