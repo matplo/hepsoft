@@ -10,6 +10,8 @@ hepmc_version=2.06.09
 root_version=v5-34-36
 pythia8_version=8226
 hepsoft_version=default
+mcorrelations_version=0.9
+jewel_version=2.2.0
 
 _this_source=$BASH_SOURCE
 
