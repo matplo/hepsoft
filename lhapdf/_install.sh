@@ -36,6 +36,8 @@ function build()
 {
     cd ${BT_src_dir}
     ./configure --prefix=${BT_install_dir}
+    echo_warning patching pyext/lhapdf_wrap.cc
+    sedi 's|PyErr_Format(PyExc_RuntimeError, mesg);|PyErr_Format(PyExc_RuntimeError, "%s", mesg);' pyext/lhapdf_wrap.cc
 	make -j $(n_cores)
 	make install
     get_PDFsets
