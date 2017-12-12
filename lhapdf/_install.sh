@@ -20,7 +20,8 @@ function get_PDFsets()
     if [ -e ${_local_file} ]; then
         echo "[i] ${_local_file} exists - will not download"
     else
-        wget --no-check-certificate https://dl.dropboxusercontent.com/u/14190654/PDFsets/PDFsets.tar.gz
+        # wget --no-check-certificate https://dl.dropboxusercontent.com/u/14190654/PDFsets/PDFsets.tar.gz
+        wget --no-check-certificate http://portal.nersc.gov/project/alice/ploskon/static/static_extra/PDFsets/PDFsets.tar.gz
     fi
     pdfsetdir=${BT_install_dir}/share/lhapdf
     mkdir -p $pdfsetdir
