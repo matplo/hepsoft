@@ -37,6 +37,16 @@ function download()
 	fi
 }
 
+function python_settings
+{
+	export PYTHON_EXECUTABLE=`which python`
+	#export PYTHON_INCLUDE_DIR=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['include'])" | python)
+	#export PYTHON_LIBRARY=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['stdlib'])" | python)/config/libpython2.7.dylib
+	export PYTHON_INCLUDE_DIR=$(python-config --includes | cut -f 1 -d " " | cut -c 3-)
+	export PYTHON_LIBRARY_DIR=$(python-config --ldflags | cut -f 1 -d " " | cut -c 3-)
+	export PYTHON_LIBRARY=${PYTHON_LIBRARY_DIR}/$(ls ${PYTHON_LIBRARY_DIR} | grep .dylib)
+}
+
 function build()
 {
 	cd ${BT_build_dir}
@@ -47,6 +57,10 @@ function build()
 	local _gcc=$(which gcc)
 	local _gpp=$(which g++)
 	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
+	[ $(os_darwin) ] && python_settings && config_opts="-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY}"
+	echo_warning "PYTHON_EXECUTABLE=$PYTHON_EXECUTABLE"
+	echo_warning "PYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR"
+	echo_warning "PYTHON_LIBRARY=$PYTHON_LIBRARY"
 	compiler_opts="-DCMAKE_C_COMPILER=${_gcc} -DCMAKE_CXX_COMPILER=${_gpp} -DCMAKE_Fortran_COMPILER=${_gff}"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
 	echo ${BT_src_dir}
