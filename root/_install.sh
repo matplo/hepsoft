@@ -47,6 +47,7 @@ function build()
 	local _gcc=$(which gcc)
 	local _gpp=$(which g++)
 	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
+	config_opts="$config_opts -Dmathmore=ON"
 	compiler_opts="-DCMAKE_C_COMPILER=${_gcc} -DCMAKE_CXX_COMPILER=${_gpp} -DCMAKE_Fortran_COMPILER=${_gff}"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
 	echo ${BT_src_dir}
