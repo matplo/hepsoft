@@ -13,7 +13,7 @@ function build()
 {
 	cd ${BT_src_dir}
 	if [ "x${CGAL_DIR}" == "x" ]; then
-	    ./configure --prefix=${install_dir} --enable-allcxxplugins
+	    ./configure --prefix=${BT_install_dir} --enable-allcxxplugins
 	else
 		echo "[i] building using cgal at ${CGAL_DIR}"
 	    ./configure --prefix=${BT_install_dir} --enable-allcxxplugins --enable-cgal --with-cgaldir=${CGAL_DIR} LDFLAGS=-Wl,-rpath,${BOOST_DIR}/lib CXXFLAGS=-I${BOOST_DIR}/include CPPFLAGS=-I${BOOST_DIR}/include
