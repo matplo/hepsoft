@@ -7,7 +7,8 @@ BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=jewel
 BT_version=2.2.0
-BT_remote_file=http://www.hepforge.org/archive/jewel/jewel-${BT_version}.tar.gz
+# BT_remote_file=http://www.hepforge.org/archive/jewel/jewel-${BT_version}.tar.gz
+BT_remote_file=https://jewel.hepforge.org/downloads/jewel-${BT_version}.tar.gz
 
 function build()
 {
