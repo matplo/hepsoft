@@ -9,6 +9,7 @@ fj_version=3.3.0
 fj_contrib_version=1.027
 lhapdf_version=5.9.1
 hepmc_version=2.06.09
+hepmc3_version=3.0.0
 root_version=v5-34-36
 root6_version=v6-12-04
 pythia8_version=8226
