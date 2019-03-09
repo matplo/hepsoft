@@ -45,6 +45,12 @@ function python_settings
 	export PYTHON_INCLUDE_DIR=$(python-config --includes | cut -f 1 -d " " | cut -c 3-)
 	export PYTHON_LIBRARY_DIR=$(python-config --ldflags | cut -f 1 -d " " | cut -c 3-)
 	export PYTHON_LIBRARY=${PYTHON_LIBRARY_DIR}/$(ls ${PYTHON_LIBRARY_DIR} | grep .dylib)
+	if [ ! -d ${PYTHON_LIBRARY_DIR} ]; then
+		echo_warning "python settings - alter"
+		export PYTHON_LIBRARY_DIR=$(python-config --prefix)/lib
+		slib=$(python-config --ldflags | cut -f 1 -d " " | cut -c 3-)
+		export PYTHON_LIBRARY=$(ls ${PYTHON_LIBRARY_DIR}/lib${slib}*.dylib)
+	fi
 }
 
 function build()
