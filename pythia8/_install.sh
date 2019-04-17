@@ -28,7 +28,12 @@ function build()
 		fastjet_opt=--with-fastjet3=$fastjetDIR
 	fi
 
-    ./configure --prefix=${BT_install_dir} ${root_opt} ${hepmc_opt} ${lhapdf_opt} --with-python
+	# python_inc_dir=/usr/include/python2.7
+	python_inc_dir=$(python-config --includes | cut -d' ' -f 1 | cut -dI -f 2)
+	python_exec=$(which python)
+	python_bin_dir=$(dirname ${python_exec})
+    ./configure --prefix=${BT_install_dir} ${root_opt} ${hepmc_opt} ${lhapdf_opt} \
+    	--with-python-include=${python_inc_dir} --with-python-bin=${python_bin_dir}
 
 	make -j $(n_cores)
 	make install
