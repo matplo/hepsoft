@@ -4,8 +4,8 @@ BT_install_prefix=<hepsoft>
 # add_prereq_modules
 
 BT_name=cmake
-BT_version=3.9.1
-BT_remote_file=https://cmake.org/files/v3.9/cmake-${BT_version}.tar.gz
+BT_version=3.14.2
+BT_remote_file=https://cmake.org/files/v3.14/cmake-${BT_version}.tar.gz
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 function build()

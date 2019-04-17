@@ -1,20 +1,22 @@
 #!/bin/bash
 
-cmake_version=3.9.1
-boost_version=1.64.0
-cgal_version=4.10
-fastjet_version=3.3.0
-fastjet_contrib_version=1.027
-fj_version=3.3.0
-fj_contrib_version=1.027
+# cmake_version=3.9.1
+cmake_version=3.14.2
+boost_version=1.70.0
+cgal_version=4.14
+fastjet_version=3.3.2
+fastjet_contrib_version=1.041
+fj_version=3.3.2
+fj_contrib_version=1.041
 lhapdf_version=5.9.1
 hepmc_version=2.06.09
 hepmc3_version=3.0.0
-root_version=v5-34-36
+root5_version=v5-34-36
 #root6_version=v6-12-04
 root6_version=v6-16-00
+root_version=${root6_version}
 pythia8_version=8235
-hepsoft_version=default
+hepsoft_version=r6
 envmodules_version=3.2.10
 jewel_version=2.2.0
 mcorrelations_version=0.9
