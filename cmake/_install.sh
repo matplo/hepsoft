@@ -18,9 +18,9 @@ function build()
 		./configure --prefix=${BT_install_dir}
 	else
 		if [ "x${BT_enable_qt}" = "x" ]; then
-			${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4 --qt-gui
-		else
 			${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4
+		else
+			${BT_src_dir}/configure --prefix=${BT_install_dir} --parallel=4 --qt-gui
 		fi
 	fi
 	make -j $(n_cores)

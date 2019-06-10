@@ -2,7 +2,7 @@
 
 # cmake_version=3.9.1
 cmake_version=3.14.2
-boost_version=1.70.0
+boost_version=1.68.0
 cgal_version=4.14
 fastjet_version=3.3.2
 fastjet_contrib_version=1.041
