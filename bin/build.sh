@@ -24,6 +24,7 @@ YODA_version=1.7.0
 rivet_version=2.6.0
 #rivet_version=3.0.0alpha1
 herwig_version=7.x
+gcc_version=7.4.0
 
 install_prefix=$HOME/software/hepsoft
 _this_source=$BASH_SOURCE

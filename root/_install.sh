@@ -67,6 +67,8 @@ function build()
 	echo_warning "PYTHON_EXECUTABLE=$PYTHON_EXECUTABLE"
 	echo_warning "PYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR"
 	echo_warning "PYTHON_LIBRARY=$PYTHON_LIBRARY"
+	# disable external xrootd - likely built with system gcc
+	config_opts="-Dbuiltin_xrootd=ON"
 	compiler_opts="-DCMAKE_C_COMPILER=${_gcc} -DCMAKE_CXX_COMPILER=${_gpp} -DCMAKE_Fortran_COMPILER=${_gff}"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
 	echo ${BT_src_dir}
