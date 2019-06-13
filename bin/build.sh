@@ -2,7 +2,7 @@
 
 # cmake_version=3.9.1
 cmake_version=3.14.2
-boost_version=1.70.0
+boost_version=1.68.0
 cgal_version=4.14
 fastjet_version=3.3.2
 fastjet_contrib_version=1.041
@@ -24,6 +24,7 @@ YODA_version=1.7.0
 rivet_version=2.6.0
 #rivet_version=3.0.0alpha1
 herwig_version=7.x
+gcc_version=7.4.0
 
 install_prefix=$HOME/software/hepsoft
 _this_source=$BASH_SOURCE
