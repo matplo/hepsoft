@@ -19,6 +19,7 @@ function build()
 		./configure --prefix=${BT_install_dir} CXXFLAGS="-shared -fPIC"
 		make -j $(n_cores)
 		make install
+		make fragile-shared-install
 	else
 		echo "[w] fastjet-config not found. stop." && do_exit ${BT_error_code}
 	fi
