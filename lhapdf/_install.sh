@@ -5,40 +5,16 @@ add_prereq_module_paths "${BT_install_prefix}/modules"
 add_prereq_modules cmake
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
-BT_name=lhapdf
-BT_version=5.9.1
-BT_remote_file=http://www.hepforge.org/archive/lhapdf/lhapdf-5.9.1.tar.gz
-BT_pythonlib=python2.7/site-packages
-
-function get_PDFsets()
-{
-	savedir=$PWD
-    check_install_paths
-    check_download_paths
-    cd ${BT_download_dir}
-    local _local_file=${BT_download_dir}/PDFsets.tar.gz
-    if [ -e ${_local_file} ]; then
-        echo "[i] ${_local_file} exists - will not download"
-    else
-        # wget --no-check-certificate https://dl.dropboxusercontent.com/u/14190654/PDFsets/PDFsets.tar.gz
-        wget --no-check-certificate http://portal.nersc.gov/project/alice/ploskon/static/static_extra/PDFsets/PDFsets.tar.gz
-    fi
-    pdfsetdir=${BT_install_dir}/share/lhapdf
-    mkdir -p $pdfsetdir
-    cd $pdfsetdir
-    tar zxvf ${_local_file}
-    ls -ltr $pdfsetdir/PDFsets
-    echo "[i] installing PDFsets done."
-    cd $savedir
-}
+BT_name=LHAPDF
+BT_version=6.2.3
+BT_fname="${BT_NAME}-${BT_version}"
+BT_remote_file=https://lhapdf.hepforge.org/downloads/?f=${BT_fname}.tar.gz -O ${BT_fname}.tar.gz
+python_version=$(python3 --version | cut -f 2 -d' ' | cut -f 1-2 -d.)
+BT_pythonlib=python${python_version}/site-packages
 
 function build()
 {
     cd ${BT_src_dir}
     ./configure --prefix=${BT_install_dir}
-    echo_warning patching pyext/lhapdf_wrap.cc
-    sedi "s/PyExc_RuntimeError,[[:blank:]]mesg/PyExc_RuntimeError,\"%s\",mesg/g" ./pyext/lhapdf_wrap.cc
-    make -j $(n_cores)
-    make install
-    get_PDFsets
+    make -j $(n_cores) && make install
 }

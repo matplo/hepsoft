@@ -9,11 +9,12 @@ fastjet_contrib_version=1.041
 fj_version=3.3.2
 fj_contrib_version=1.041
 lhapdf_version=5.9.1
+lhapdf_version=6.2.3
 hepmc_version=2.06.09
 hepmc3_version=3.0.0
 root5_version=v5-34-36
 #root6_version=v6-12-04
-root6_version=v6-16-00
+root6_version=v6-18-00
 root_version=${root6_version}
 pythia8_version=8235
 hepsoft_version=r6
@@ -51,7 +52,13 @@ cd ./build_hepsoft
 echo "[i] $BASH_SOURCE directory: ${_this_dir_resolved}"
 
 _packages=""
-[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
+if [ $(os_darwin) ]; then
+	export BOOST_DIR=/usr/local
+	export CGAL_DIR=/usr/local
+	[ $(is_opt_set --all) == "yes" ] && _packages="fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
+else
+	[ $(is_opt_set --all) == "yes" ] && _packages="cmake boost cgal fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
+fi
 for _p in "$@"
 do
 	if [ ${_p:0:2} == "--" ]; then

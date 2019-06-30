@@ -5,10 +5,11 @@ add_prereq_module_paths "${BT_install_prefix}/modules"
 add_prereq_modules cmake boost cgal
 
 BT_name=fastjet
-BT_version=3.3.0
+BT_version=3.3.2
 BT_remote_file=http://fastjet.fr/repo/fastjet-${BT_version}.tar.gz
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
-BT_pythonlib=python2.7/site-packages
+python_version=$(python --version | cut -f 2 -d' ' | cut -f 1-2 -d.)
+BT_pythonlib=python${python_version}/site-packages
 
 function build()
 {

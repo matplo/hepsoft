@@ -8,6 +8,7 @@ BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 BT_name=pythia8
 BT_version=8226
 BT_remote_file=http://home.thep.lu.se/~torbjorn/pythia8/pythia${BT_version}.tgz
+BT_pythonlib=/
 
 function build()
 {
