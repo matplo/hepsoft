@@ -2,7 +2,8 @@
 
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
-add_prereq_modules cmake root hepmc lhapdf boost cgal fastjet
+#add_prereq_modules cmake root hepmc lhapdf boost cgal fastjet
+add_prereq_modules cmake root hepmc LHAPDF boost cgal fastjet
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=pythia8
@@ -22,8 +23,11 @@ function build()
 	if [ ! -z ${hepmcDIR} ]; then
 		hepmc_opt=--with-hepmc2=$hepmcDIR
 	fi
-	if [ ! -z ${lhapdfDIR} ]; then
-		lhapdf_opt=--with-lhapdf5=$lhapdfDIR
+	if [ ! -z ${lhapdf5DIR} ]; then
+		lhapdf_opt=--with-lhapdf5=$lhapdf5DIR
+	fi
+	if [ ! -z ${LHAPDFDIR} ]; then
+		lhapdf_opt=--with-lhapdf6=$LHAPDFDIR
 	fi
 	if [ ! -z ${fastjetDIR} ]; then
 		fastjet_opt=--with-fastjet3=$fastjetDIR
