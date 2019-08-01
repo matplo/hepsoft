@@ -12,6 +12,7 @@ BT_version=v6-12-04
 BT_remote_dir=http://root.cern.ch/git/root.git
 BT_remote_file="installing_from_git"
 BT_pythonlib=/
+python_version=$(python3 --version | cut -f 2 -d' ' | cut -f 1-2 -d.)
 BT_build_type=Release
 BT_local_file=${BT_src_dir}
 
@@ -37,13 +38,29 @@ function download()
 	fi
 }
 
-function python_settings
+function python2_settings
 {
 	export PYTHON_EXECUTABLE=`which python`
 	#export PYTHON_INCLUDE_DIR=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['include'])" | python)
 	#export PYTHON_LIBRARY=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['stdlib'])" | python)/config/libpython2.7.dylib
 	export PYTHON_INCLUDE_DIR=$(python-config --includes | cut -f 1 -d " " | cut -c 3-)
 	export PYTHON_LIBRARY_DIR=$(python-config --ldflags | cut -f 1 -d " " | cut -c 3-)
+	export PYTHON_LIBRARY=${PYTHON_LIBRARY_DIR}/$(ls ${PYTHON_LIBRARY_DIR} | grep .dylib)
+	if [ ! -d ${PYTHON_LIBRARY_DIR} ]; then
+		echo_warning "python settings - alter"
+		export PYTHON_LIBRARY_DIR=$(python-config --prefix)/lib
+		slib=$(python-config --ldflags | cut -f 1 -d " " | cut -c 3-)
+		export PYTHON_LIBRARY=$(ls ${PYTHON_LIBRARY_DIR}/lib${slib}*.dylib)
+	fi
+}
+
+function python_settings
+{
+	export PYTHON_EXECUTABLE=`which python3`
+	#export PYTHON_INCLUDE_DIR=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['include'])" | python)
+	#export PYTHON_LIBRARY=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['stdlib'])" | python)/config/libpython2.7.dylib
+	export PYTHON_INCLUDE_DIR=$(python3-config --includes | cut -f 1 -d " " | cut -c 3-)
+	export PYTHON_LIBRARY_DIR=$(python3-config --ldflags | cut -f 1 -d " " | cut -c 3-)
 	export PYTHON_LIBRARY=${PYTHON_LIBRARY_DIR}/$(ls ${PYTHON_LIBRARY_DIR} | grep .dylib)
 	if [ ! -d ${PYTHON_LIBRARY_DIR} ]; then
 		echo_warning "python settings - alter"

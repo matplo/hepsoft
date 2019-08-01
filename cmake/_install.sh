@@ -5,7 +5,8 @@ BT_install_prefix=<hepsoft>
 
 BT_name=cmake
 BT_version=3.14.2
-BT_remote_file=https://cmake.org/files/v3.14/cmake-${BT_version}.tar.gz
+# BT_remote_file=https://cmake.org/files/v3.14/cmake-${BT_version}.tar.gz
+BT_remote_file=https://github.com/Kitware/CMake/releases/download/v${BT_version}/cmake-${BT_version}.tar.gz
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 function build()
