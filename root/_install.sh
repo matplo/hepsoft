@@ -4,7 +4,7 @@ savedir=$PWD
 
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
-add_prereq_modules cmake
+#add_prereq_modules cmake
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=root
@@ -60,14 +60,9 @@ function python_settings
 	#export PYTHON_INCLUDE_DIR=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['include'])" | python)
 	#export PYTHON_LIBRARY=$(echo "from sysconfig import get_paths; info = get_paths(); print(info['stdlib'])" | python)/config/libpython2.7.dylib
 	export PYTHON_INCLUDE_DIR=$(python3-config --includes | cut -f 1 -d " " | cut -c 3-)
-	export PYTHON_LIBRARY_DIR=$(python3-config --ldflags | cut -f 1 -d " " | cut -c 3-)
-	export PYTHON_LIBRARY=${PYTHON_LIBRARY_DIR}/$(ls ${PYTHON_LIBRARY_DIR} | grep .dylib)
-	if [ ! -d ${PYTHON_LIBRARY_DIR} ]; then
-		echo_warning "python settings - alter"
-		export PYTHON_LIBRARY_DIR=$(python-config --prefix)/lib
-		slib=$(python-config --ldflags | cut -f 1 -d " " | cut -c 3-)
-		export PYTHON_LIBRARY=$(ls ${PYTHON_LIBRARY_DIR}/lib${slib}*.dylib)
-	fi
+	export PYTHON_LIBRARY_DIR=$(python3-config --ldflags | cut -f 1-2 -d " " | cut -c 4-)
+	_lname=$(python3-config --ldflags | cut -f 3 -d " " | cut -c 3-)
+	export PYTHON_LIBRARY=${PYTHON_LIBRARY_DIR}/lib${_lname}.so
 }
 
 function build()
@@ -79,13 +74,15 @@ function build()
 	local _gff=$(which gfortran)
 	local _gcc=$(which gcc)
 	local _gpp=$(which g++)
+	python_settings
 	[ $(host_pdsf) ] && config_opts="-Dxrootd=OFF -Dldap=OFF"
-	[ $(os_darwin) ] && python_settings && config_opts="-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY}"
+	config_opts="-DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY} ${config_opts}"
 	echo_warning "PYTHON_EXECUTABLE=$PYTHON_EXECUTABLE"
 	echo_warning "PYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR"
+	echo_warning "PYTHON_LIBRARY_DIR=$PYTHON_LIBRARY_DIR"
 	echo_warning "PYTHON_LIBRARY=$PYTHON_LIBRARY"
 	# disable external xrootd - likely built with system gcc
-	config_opts="-Dbuiltin_xrootd=ON -Dmathmore=ON"
+	config_opts="-Dbuiltin_xrootd=ON -Dmathmore=ON ${config_opts}"
 	compiler_opts="-DCMAKE_C_COMPILER=${_gcc} -DCMAKE_CXX_COMPILER=${_gpp} -DCMAKE_Fortran_COMPILER=${_gff}"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
 	echo ${BT_src_dir}
