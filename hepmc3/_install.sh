@@ -2,7 +2,8 @@
 
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
-add_prereq_modules cmake pythia8 root6
+#add_prereq_modules cmake pythia8 root6
+add_prereq_modules pythia8 root
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}/3
 
 BT_name=hepmc

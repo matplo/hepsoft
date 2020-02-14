@@ -4,7 +4,7 @@ savedir=$PWD
 
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
-add_prereq_modules cmake
+#add_prereq_modules cmake
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 
 BT_name=root
@@ -85,7 +85,7 @@ function build()
 	echo_warning "PYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR"
 	echo_warning "PYTHON_LIBRARY=$PYTHON_LIBRARY"
 	# disable external xrootd - likely built with system gcc
-	config_opts="-Dbuiltin_xrootd=ON -Dmathmore=ON"
+	config_opts="-Dbuiltin_xrootd=ON -Dmathmore=ON -Dvmc=ON -Dxml=ON"
 	compiler_opts="-DCMAKE_C_COMPILER=${_gcc} -DCMAKE_CXX_COMPILER=${_gpp} -DCMAKE_Fortran_COMPILER=${_gff}"
 	echo "[i] extra options: ${config_opts} ${compiler_opts}"
 	echo ${BT_src_dir}
