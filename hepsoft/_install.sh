@@ -2,7 +2,8 @@
 
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
-add_prereq_modules cmake root hepmc lhapdf boost cgal fastjet pythia8
+#add_prereq_modules cmake root hepmc lhapdf boost cgal fastjet pythia8
+add_prereq_modules root hepmc LHAPDF boost cgal fastjet pythia8
 echo_padded_BT_var modules
 BT_module_dir=${BT_install_prefix}/modules/${BT_name}
 BT_name=hepsoft

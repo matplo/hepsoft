@@ -74,7 +74,8 @@ if [ $(os_darwin) ]; then
 	export CGAL_DIR=/usr/local
 	[ $(is_opt_set --all) == "yes" ] && _packages="fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
 else
-	[ $(is_opt_set --all) == "yes" ] && _packages="gcc cmake boost cgal fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
+	# [ $(is_opt_set --all) == "yes" ] && _packages="gcc cmake boost cgal fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
+	[ $(is_opt_set --all) == "yes" ] && _packages="boost cgal fastjet fastjet_contrib root lhapdf hepmc pythia8 hepsoft"
 fi
 for _p in "$@"
 do

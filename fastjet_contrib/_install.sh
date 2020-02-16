@@ -2,7 +2,8 @@
 
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
-add_prereq_modules cmake boost cgal fastjet
+#add_prereq_modules cmake boost cgal fastjet
+add_prereq_modules fastjet
 
 BT_name=fastjet_contrib
 BT_version=1.027

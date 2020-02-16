@@ -1,9 +1,9 @@
 #!/bin/bash
 
-
 BT_install_prefix=<hepsoft>
 add_prereq_module_paths "${BT_install_prefix}/modules"
 #add_prereq_modules cmake boost
+add_prereq_modules boost
 
 BT_name=cgal
 BT_version=4.10
